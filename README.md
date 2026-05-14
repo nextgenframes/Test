@@ -9,6 +9,7 @@ Career Match is a lightweight browser app that searches public job boards and ra
 - scores jobs against resume-aligned keywords and experience areas
 - drafts a tailored pitch, follow-up note, and application checklist
 - saves interesting roles locally in the browser
+- can AI-rerank roles and generate an AI application kit when an OpenRouter or OpenAI API key is configured
 
 ## Local use
 
@@ -26,6 +27,14 @@ Recommended settings:
 - Root Directory: `.`
 - Build Command: leave empty
 - Output Directory: `.`
+
+Environment variables for AI features:
+
+- `OPENROUTER_API_KEY` (recommended)
+- `OPENROUTER_MODEL` optional, defaults to `openrouter/free`
+- `OPENROUTER_SITE_URL` optional, set this to your deployed site URL
+- `OPENROUTER_APP_NAME` optional, defaults to `Career Match`
+- `OPENAI_API_KEY` optional fallback
 
 ## Notes
 

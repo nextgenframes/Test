@@ -590,6 +590,7 @@
           </div>
           <div class="topbar-actions">
             <button class="button" id="searchNow">Refresh live roles</button>
+            <button class="ghost-button" id="aiRerankTop">AI rerank top jobs</button>
             <button class="ghost-button" id="copyProfileSummary">Copy resume summary</button>
             <button class="ghost-button" id="loadSeedRoles">Show fallback matches</button>
           </div>
@@ -659,6 +660,7 @@
                 <option value="12">12</option>
                 <option value="20" selected>20</option>
                 <option value="30">30</option>
+                <option value="50">50</option>
               </select>
             </div>
           </div>
@@ -682,17 +684,35 @@
               <div class="stack">
                 <div class="panel">
                   <div class="profile-list">
-                    <div class="profile-item">
-                      <strong>Your name here</strong>
-                      <span>Your preferred location</span>
+                    <div class="field">
+                      <label for="profileName">Name</label>
+                      <input id="profileName" type="text" value="Your name here" />
                     </div>
-                    <div class="profile-item">
-                      <strong>Core experience</strong>
-                      <span>Replace this sample text with your own operations, technician, support, or logistics background.</span>
+                    <div class="field">
+                      <label for="profileLocation">Location</label>
+                      <input id="profileLocation" type="text" value="Your preferred location" />
                     </div>
-                    <div class="profile-item">
-                      <strong>Comp target</strong>
-                      <span>$80,000-$120,000 salary or $35-$60/hour.</span>
+                    <div class="field">
+                      <label for="profileCoreExperience">Core experience</label>
+                      <textarea id="profileCoreExperience">Replace this sample text with your own operations, technician, support, or logistics background.</textarea>
+                    </div>
+                    <div class="field">
+                      <label for="salaryTarget">Salary target</label>
+                      <select id="salaryTarget">
+                        <option value="70000-90000">$70,000-$90,000</option>
+                        <option value="80000-120000" selected>$80,000-$120,000</option>
+                        <option value="100000-140000">$100,000-$140,000</option>
+                        <option value="120000-160000">$120,000-$160,000</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label for="hourlyTarget">Hourly target</label>
+                      <select id="hourlyTarget">
+                        <option value="30-45">$30-$45/hour</option>
+                        <option value="35-60" selected>$35-$60/hour</option>
+                        <option value="45-70">$45-$70/hour</option>
+                        <option value="60-90">$60-$90/hour</option>
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -772,6 +792,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
                   <p id="detailSummary"></p>
                   <div class="detail-actions">
                     <a class="button" id="applyLink" href="#" target="_blank" rel="noreferrer">Open application</a>
+                    <button class="ghost-button" id="generateAiKit">Generate AI kit</button>
                     <button class="ghost-button" id="saveRole">Save role</button>
                     <button class="ghost-button" id="copyPitch">Copy pitch</button>
                     <button class="ghost-button" id="copyEmail">Copy follow-up</button>
@@ -823,6 +844,9 @@ High-volume support role: process discipline, pattern recognition, decision cons
         selectedJobId: null,
         tracker: JSON.parse(localStorage.getItem("career-match-tracker") || "{}"),
         lastSearchMode: "live",
+        aiReady: false,
+        aiReranked: false,
+        aiKitByJobId: {},
       };
 
       const baseProfile = {
@@ -1046,12 +1070,19 @@ High-volume support role: process discipline, pattern recognition, decision cons
       const tailoredEmail = document.querySelector("#tailoredEmail");
       const statusRow = document.querySelector("#statusRow");
       const applyLink = document.querySelector("#applyLink");
+      const aiRerankTopButton = document.querySelector("#aiRerankTop");
+      const generateAiKitButton = document.querySelector("#generateAiKit");
 
       const titleSearch = document.querySelector("#titleSearch");
       const locationMode = document.querySelector("#locationMode");
       const compMode = document.querySelector("#compMode");
       const companyScope = document.querySelector("#companyScope");
       const resultLimit = document.querySelector("#resultLimit");
+      const profileName = document.querySelector("#profileName");
+      const profileLocation = document.querySelector("#profileLocation");
+      const profileCoreExperience = document.querySelector("#profileCoreExperience");
+      const salaryTarget = document.querySelector("#salaryTarget");
+      const hourlyTarget = document.querySelector("#hourlyTarget");
       const profileHeadline = document.querySelector("#profileHeadline");
       const profileKeywords = document.querySelector("#profileKeywords");
       const profileWins = document.querySelector("#profileWins");
@@ -1075,6 +1106,16 @@ High-volume support role: process discipline, pattern recognition, decision cons
         showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2600);
       };
 
+      const parseRangeValue = (value, fallbackMin, fallbackMax) => {
+        const [minRaw, maxRaw] = String(value || "")
+          .split("-")
+          .map((item) => Number(item));
+        return {
+          min: Number.isFinite(minRaw) ? minRaw : fallbackMin,
+          max: Number.isFinite(maxRaw) ? maxRaw : fallbackMax,
+        };
+      };
+
       const getProfile = () => {
         const keywords = profileKeywords.value
           .split(",")
@@ -1086,12 +1127,37 @@ High-volume support role: process discipline, pattern recognition, decision cons
           .map((item) => item.trim())
           .filter(Boolean);
 
+        const salary = parseRangeValue(salaryTarget.value, baseProfile.pay.salaryMin, baseProfile.pay.salaryMax);
+        const hourly = parseRangeValue(hourlyTarget.value, baseProfile.pay.hourlyMin, baseProfile.pay.hourlyMax);
+
         return {
           ...baseProfile,
+          name: profileName.value.trim() || baseProfile.name,
+          location: profileLocation.value.trim() || baseProfile.location,
+          coreExperience: profileCoreExperience.value.trim(),
+          pay: {
+            salaryMin: salary.min,
+            salaryMax: salary.max,
+            hourlyMin: hourly.min,
+            hourlyMax: hourly.max,
+          },
           headline: profileHeadline.value.trim(),
           tags: keywords,
           winLines: wins,
         };
+      };
+
+      const postJson = async (url, payload) => {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed.");
+        }
+        return data;
       };
 
       const parseCompensation = (text) => {
@@ -1107,13 +1173,17 @@ High-volume support role: process discipline, pattern recognition, decision cons
         if (numbers.length >= 2) {
           const min = Math.min(...numbers);
           const max = Math.max(...numbers);
-          const withinRange = hourly
-            ? max >= baseProfile.pay.hourlyMin && min <= baseProfile.pay.hourlyMax
-            : max >= baseProfile.pay.salaryMin && min <= baseProfile.pay.salaryMax;
-          return { kind: hourly ? "hourly" : "salary", min, max, withinRange };
+          return { kind: hourly ? "hourly" : "salary", min, max, withinRange: null };
         }
 
         return { kind: hourly ? "hourly" : "salary", withinRange: null };
+      };
+
+      const compensationInRange = (parsed, pay) => {
+        if (!parsed || parsed.kind === "unknown" || parsed.min == null || parsed.max == null) return null;
+        return parsed.kind === "hourly"
+          ? parsed.max >= pay.hourlyMin && parsed.min <= pay.hourlyMax
+          : parsed.max >= pay.salaryMin && parsed.min <= pay.salaryMax;
       };
 
       const detectRemoteCategory = (job) => {
@@ -1212,6 +1282,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
         );
         let score = 22;
         const reasons = [];
+        const withinRange = compensationInRange(job.compensationParsed, profile.pay);
 
         roleKeywordWeights.forEach(([term, weight]) => {
           if (haystack.includes(term)) {
@@ -1233,10 +1304,10 @@ High-volume support role: process discipline, pattern recognition, decision cons
         });
 
         if (job.compensationParsed.kind !== "unknown") {
-          if (job.compensationParsed.withinRange) {
+          if (withinRange) {
             score += 12;
             reasons.push("Comp in range");
-          } else {
+          } else if (withinRange === false) {
             score -= 8;
           }
         }
@@ -1269,6 +1340,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
           .filter((item) => item.length >= 4);
 
       const matchesFilters = (job) => {
+        const pay = getProfile().pay;
         const rawGroups = normalize(titleSearch.value)
           .split(",")
           .map((item) => item.trim())
@@ -1292,7 +1364,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
 
         if (compMode.value === "strict") {
           if (job.compensationParsed.kind === "unknown") return false;
-          if (!job.compensationParsed.withinRange) return false;
+          if (!compensationInRange(job.compensationParsed, pay)) return false;
         }
 
         return true;
@@ -1340,11 +1412,13 @@ High-volume support role: process discipline, pattern recognition, decision cons
 
       const renderStats = () => {
         const top = state.filteredJobs[0];
-        const payMatches = state.filteredJobs.filter((job) => job.compensationParsed.withinRange).length;
+        const pay = getProfile().pay;
+        const payMatches = state.filteredJobs.filter((job) => compensationInRange(job.compensationParsed, pay)).length;
 
         topMatchValue.textContent = top ? `${top.match.score}%` : "--";
         topMatchNote.textContent = top ? `${top.title} at ${top.company}` : "Run a search to score current openings.";
         payLaneValue.textContent = String(payMatches);
+        aiRerankTopButton.textContent = state.aiReranked ? "AI reranked" : "AI rerank top jobs";
       };
 
       const renderResults = () => {
@@ -1408,7 +1482,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
           })
           .sort((a, b) => b.hits - a.hits)[0];
 
-        return `${profile.name} looks strong for this role because the resume already lines up with ${job.company}'s operating environment: ${topExperience.role.toLowerCase()} experience, hands-on vehicle support background, and the kind of structured documentation and issue ownership that AV operations teams rely on. In an application, emphasize fast coordination across teams, practical vehicle judgment, and reliability under shift-based or field-based workflows.`;
+        return `${profile.name} looks strong for this role because the background already lines up with ${job.company}'s operating environment: ${topExperience.role.toLowerCase()} experience, hands-on support knowledge, and the kind of structured documentation and issue ownership that operations teams rely on. In an application, emphasize fast coordination across teams, practical troubleshooting judgment, and reliability under shift-based or field-based workflows.`;
       };
 
       const generateBullets = (job) => {
@@ -1430,7 +1504,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
       const generateChecklist = (job) => {
         const list = [
           `Tailor the resume headline around "${job.title}" and the mix of operations, technician, service, or support work it calls for.`,
-          "Move Zoox experience above other roles if it is not already first.",
+          "Move the most relevant experience above less relevant roles if it is not already first.",
           "Mirror the job language for fleet, triage, diagnostics, deployment, or technician work where appropriate.",
           "Add one short metric or scope detail to each highlighted experience before applying.",
         ];
@@ -1447,7 +1521,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
       };
 
       const generateEmail = (job) => {
-        return `Hi ${job.company} team, I applied for the ${job.title} role and wanted to share a short note on fit. My background includes Zoox fleet operations and triage work plus hands-on automotive technician experience, so I’m especially interested in roles that combine vehicle readiness, issue resolution, and dependable cross-functional support. I’d be glad to speak further about how that background could help your team.`;
+        return `Hi ${job.company} team, I applied for the ${job.title} role and wanted to share a short note on fit. My background includes operations support, troubleshooting, documentation, and hands-on technical work, so I’m especially interested in roles that combine issue resolution, dependable execution, and strong cross-functional support. I’d be glad to speak further about how that background could help your team.`;
       };
 
       const renderDetail = () => {
@@ -1459,9 +1533,10 @@ High-volume support role: process discipline, pattern recognition, decision cons
         }
 
         const profile = getProfile();
-        const bullets = generateBullets(job);
-        const checklist = generateChecklist(job);
-        const email = generateEmail(job);
+        const aiKit = state.aiKitByJobId[job.id] || null;
+        const bullets = aiKit?.bullets || generateBullets(job);
+        const checklist = aiKit?.checklist || generateChecklist(job);
+        const email = aiKit?.follow_up || generateEmail(job);
         const saved = state.tracker[job.id];
 
         detailEmpty.hidden = true;
@@ -1489,7 +1564,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
           fitReasons.appendChild(span);
         });
 
-        tailoredPitch.textContent = generatePitch(job, profile);
+        tailoredPitch.textContent = aiKit?.pitch || generatePitch(job, profile);
 
         tailoredBullets.innerHTML = "";
         bullets.forEach((line) => {
@@ -1561,6 +1636,82 @@ High-volume support role: process discipline, pattern recognition, decision cons
         renderDetail();
       };
 
+      const aiRerankTopJobs = async () => {
+        if (!state.filteredJobs.length) {
+          showToast("Load some jobs first.");
+          return;
+        }
+
+        searchStatus.textContent = "Using AI to rerank the top jobs...";
+        aiRerankTopButton.disabled = true;
+
+        try {
+          const result = await postJson("/api/ai-rerank", {
+            profile: getProfile(),
+            jobs: state.filteredJobs.slice(0, 12),
+          });
+
+          const byId = new Map((result.ranked_jobs || []).map((item) => [item.id, item]));
+          state.filteredJobs = state.filteredJobs
+            .map((job) => {
+              const ai = byId.get(job.id);
+              if (!ai) return job;
+              return {
+                ...job,
+                match: {
+                  score: ai.score,
+                  reasons: ai.reasons,
+                },
+                aiCaution: ai.caution,
+              };
+            })
+            .sort((a, b) => b.match.score - a.match.score);
+
+          state.aiReady = true;
+          state.aiReranked = true;
+          state.selectedJobId = state.filteredJobs[0]?.id || state.selectedJobId;
+          searchStatus.textContent = "AI rerank complete.";
+          renderResults();
+          renderDetail();
+          showToast("AI reranked the top jobs.");
+        } catch (error) {
+          console.info(error);
+          searchStatus.textContent = "AI rerank unavailable. Using rule-based matching.";
+          showToast("AI rerank is not ready yet. Add OPENROUTER_API_KEY in Vercel.");
+        } finally {
+          aiRerankTopButton.disabled = false;
+        }
+      };
+
+      const generateAiKit = async () => {
+        const job = getSelectedJob();
+        if (!job) {
+          showToast("Pick a job first.");
+          return;
+        }
+
+        generateAiKitButton.disabled = true;
+        generateAiKitButton.textContent = "Generating...";
+
+        try {
+          const result = await postJson("/api/ai-apply", {
+            profile: getProfile(),
+            job,
+          });
+
+          state.aiReady = true;
+          state.aiKitByJobId[job.id] = result;
+          renderDetail();
+          showToast("AI application kit is ready.");
+        } catch (error) {
+          console.info(error);
+          showToast("AI kit is not ready yet. Add OPENROUTER_API_KEY in Vercel.");
+        } finally {
+          generateAiKitButton.disabled = false;
+          generateAiKitButton.textContent = "Generate AI kit";
+        }
+      };
+
       const loadFallbackMatches = () => {
         state.lastSearchMode = "fallback";
         state.allJobs = fallbackJobs.map((job) => ({ ...job }));
@@ -1605,6 +1756,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
 
       document.querySelector("#searchNow").addEventListener("click", runSearch);
       document.querySelector("#applyFilters").addEventListener("click", applyCurrentFilters);
+      aiRerankTopButton.addEventListener("click", aiRerankTopJobs);
       document.querySelector("#loadSeedRoles").addEventListener("click", () => {
         loadFallbackMatches();
         showToast("Fallback roles loaded.");
@@ -1620,7 +1772,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
 
       document.querySelector("#copyProfileSummary").addEventListener("click", () => {
         copyText(
-          `${getProfile().headline}\n\n${profileWins.value.trim()}`,
+          `${getProfile().name}\n${getProfile().location}\n\n${getProfile().coreExperience}\n\n${getProfile().headline}\n\n${profileWins.value.trim()}`,
           "Resume summary copied.",
         );
       });
@@ -1629,6 +1781,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
         const job = getSelectedJob();
         if (job) saveJob(job);
       });
+      generateAiKitButton.addEventListener("click", generateAiKit);
 
       document.querySelector("#copyPitch").addEventListener("click", () => {
         const job = getSelectedJob();
@@ -1645,7 +1798,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
         copyText(generateEmail(job), "Follow-up note copied.");
       });
 
-      [profileHeadline, profileKeywords, profileWins].forEach((field) => {
+      [profileName, profileLocation, profileCoreExperience, salaryTarget, hourlyTarget, profileHeadline, profileKeywords, profileWins].forEach((field) => {
         field.addEventListener("change", () => {
           if (state.allJobs.length) applyCurrentFilters();
         });
