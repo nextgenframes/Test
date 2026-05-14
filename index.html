@@ -685,6 +685,11 @@
                 <div class="panel">
                   <div class="profile-list">
                     <div class="field">
+                      <label for="resumeUpload">Upload resume</label>
+                      <input id="resumeUpload" type="file" accept=".pdf,.docx,.txt,.md" />
+                      <span class="hint small" id="resumeUploadStatus">PDF, DOCX, TXT, and MD files fill the profile locally.</span>
+                    </div>
+                    <div class="field">
                       <label for="profileName">Name</label>
                       <input id="profileName" type="text" value="Your name here" />
                     </div>
@@ -837,6 +842,8 @@ High-volume support role: process discipline, pattern recognition, decision cons
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
     <script>
       const state = {
         allJobs: [],
@@ -1078,6 +1085,8 @@ High-volume support role: process discipline, pattern recognition, decision cons
       const compMode = document.querySelector("#compMode");
       const companyScope = document.querySelector("#companyScope");
       const resultLimit = document.querySelector("#resultLimit");
+      const resumeUpload = document.querySelector("#resumeUpload");
+      const resumeUploadStatus = document.querySelector("#resumeUploadStatus");
       const profileName = document.querySelector("#profileName");
       const profileLocation = document.querySelector("#profileLocation");
       const profileCoreExperience = document.querySelector("#profileCoreExperience");
@@ -1114,6 +1123,159 @@ High-volume support role: process discipline, pattern recognition, decision cons
           min: Number.isFinite(minRaw) ? minRaw : fallbackMin,
           max: Number.isFinite(maxRaw) ? maxRaw : fallbackMax,
         };
+      };
+
+      const cleanResumeText = (text) =>
+        (text || "")
+          .replace(/\r/g, "\n")
+          .replace(/[ \t]+/g, " ")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+      const readTextFile = (file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(cleanResumeText(String(reader.result || "")));
+          reader.onerror = () => reject(reader.error);
+          reader.readAsText(file);
+        });
+
+      const readArrayBuffer = (file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(reader.error);
+          reader.readAsArrayBuffer(file);
+        });
+
+      const extractPdfText = async (file) => {
+        if (!window.pdfjsLib) throw new Error("PDF parser is still loading.");
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+        const data = await readArrayBuffer(file);
+        const pdf = await window.pdfjsLib.getDocument({ data }).promise;
+        const pages = [];
+
+        for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+          const page = await pdf.getPage(pageNumber);
+          const content = await page.getTextContent();
+          pages.push(content.items.map((item) => item.str).join(" "));
+        }
+
+        return cleanResumeText(pages.join("\n"));
+      };
+
+      const extractDocxText = async (file) => {
+        if (!window.mammoth) throw new Error("DOCX parser is still loading.");
+        const arrayBuffer = await readArrayBuffer(file);
+        const result = await window.mammoth.extractRawText({ arrayBuffer });
+        return cleanResumeText(result.value);
+      };
+
+      const extractResumeText = async (file) => {
+        const name = file.name.toLowerCase();
+        if (name.endsWith(".pdf")) return extractPdfText(file);
+        if (name.endsWith(".docx")) return extractDocxText(file);
+        return readTextFile(file);
+      };
+
+      const firstResumeLine = (text) =>
+        text
+          .split("\n")
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .find((line) => {
+            if (/@|www\.|linkedin|github|phone|resume/i.test(line)) return false;
+            if (/\d{3}[-.)\s]\d{3}/.test(line)) return false;
+            return line.length >= 3 && line.length <= 60;
+          }) || "";
+
+      const inferLocation = (text) => {
+        const patterns = [
+          /([A-Z][a-zA-Z .-]+,\s*(?:CA|NY|TX|WA|OR|NV|AZ|FL|IL|MA|MI|PA|GA|CO|NC|VA|NJ|OH))\b/,
+          /(San Francisco Bay Area|Bay Area|Remote)\b/i,
+        ];
+
+        for (const pattern of patterns) {
+          const match = text.match(pattern);
+          if (match) return match[1].trim();
+        }
+
+        return "";
+      };
+
+      const inferKeywords = (text) => {
+        const catalog = [
+          "fleet operations",
+          "operations",
+          "triage",
+          "diagnostics",
+          "technician",
+          "field service",
+          "dispatch",
+          "logistics",
+          "customer support",
+          "documentation",
+          "maintenance",
+          "quality",
+          "safety",
+          "coordination",
+          "service",
+          "repair",
+          "queue management",
+          "cross-functional communication",
+          "issue tracking",
+          "vehicle tracking",
+          "shift lead",
+          "team lead",
+        ];
+        const normalized = normalize(text);
+        const found = catalog.filter((term) => normalized.includes(term));
+        return [...new Set([...found, ...baseProfile.tags])].slice(0, 18).join(", ");
+      };
+
+      const inferCoreExperience = (text) => {
+        const lines = text
+          .split("\n")
+          .map((line) => line.trim())
+          .filter((line) => line.length > 20)
+          .filter((line) => !/@|linkedin|github|education|skills/i.test(line));
+
+        return lines.slice(0, 5).join("\n");
+      };
+
+      const inferWins = (text) => {
+        const lines = text
+          .split("\n")
+          .map((line) => line.replace(/^[-*\u2022]\s*/, "").trim())
+          .filter((line) => line.length > 35)
+          .filter((line) => /led|lead|support|triage|diagnos|maintain|coordinate|dispatch|document|improve|manage|resolve|operate/i.test(line));
+
+        return lines.slice(0, 6).join("\n") || inferCoreExperience(text);
+      };
+
+      const fillProfileFromResume = (text) => {
+        const name = firstResumeLine(text);
+        const location = inferLocation(text);
+        const coreExperience = inferCoreExperience(text);
+        const wins = inferWins(text);
+
+        if (name) profileName.value = name;
+        if (location) profileLocation.value = location;
+        if (coreExperience) profileCoreExperience.value = coreExperience;
+        profileKeywords.value = inferKeywords(text);
+        if (wins) profileWins.value = wins;
+
+        const headlineParts = [];
+        const keywords = normalize(profileKeywords.value);
+        if (keywords.includes("technician") || keywords.includes("maintenance")) headlineParts.push("technician");
+        if (keywords.includes("operations") || keywords.includes("dispatch")) headlineParts.push("operations");
+        if (keywords.includes("support") || keywords.includes("triage")) headlineParts.push("support");
+        const focus = headlineParts.length ? headlineParts.join(", ") : "operations and support";
+        profileHeadline.value = `Candidate with ${focus} experience, strong documentation habits, and a fit for hands-on service, coordination, troubleshooting, and operations roles.`;
+
+        if (state.allJobs.length) applyCurrentFilters();
       };
 
       const getProfile = () => {
@@ -1796,6 +1958,31 @@ High-volume support role: process discipline, pattern recognition, decision cons
         const job = getSelectedJob();
         if (!job) return;
         copyText(generateEmail(job), "Follow-up note copied.");
+      });
+
+      resumeUpload.addEventListener("change", async () => {
+        const file = resumeUpload.files?.[0];
+        if (!file) return;
+
+        resumeUploadStatus.textContent = `Reading ${file.name}...`;
+        resumeUpload.disabled = true;
+
+        try {
+          const text = await extractResumeText(file);
+          if (!text || text.length < 40) {
+            throw new Error("The resume text was too short to parse.");
+          }
+          fillProfileFromResume(text);
+          resumeUploadStatus.textContent = `Profile filled from ${file.name}. Review the fields before applying.`;
+          showToast("Resume profile filled.");
+        } catch (error) {
+          console.info(error);
+          resumeUploadStatus.textContent = "Could not read that file. Try a text-based PDF, DOCX, TXT, or MD resume.";
+          showToast("Resume upload did not parse.");
+        } finally {
+          resumeUpload.disabled = false;
+          resumeUpload.value = "";
+        }
       });
 
       [profileName, profileLocation, profileCoreExperience, salaryTarget, hourlyTarget, profileHeadline, profileKeywords, profileWins].forEach((field) => {

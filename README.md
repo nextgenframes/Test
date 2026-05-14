@@ -7,6 +7,7 @@ Career Match is a lightweight browser app that searches public job boards and ra
 - pulls live openings from a curated set of public company job boards
 - filters for remote, on-site, or SF Bay Area roles
 - scores jobs against resume-aligned keywords and experience areas
+- autofills the profile from PDF, DOCX, TXT, or MD resumes in the browser
 - drafts a tailored pitch, follow-up note, and application checklist
 - saves interesting roles locally in the browser
 - can AI-rerank roles and generate an AI application kit when an OpenRouter or OpenAI API key is configured
