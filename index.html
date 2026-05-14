@@ -580,12 +580,11 @@
       <div class="shell">
         <header class="topbar">
           <div class="brand">
-            <span class="eyebrow">Operations, fleet, technician, support, and AV roles matched to your background</span>
+            <span class="eyebrow">Personalized job matches from your resume or profile</span>
             <h1>Career Match</h1>
             <p>
-              Search live openings that fit your resume across autonomous vehicle, fleet, technician,
-              service, logistics, and operations work. The app ranks roles against your background
-              and builds a tailored application kit for each one.
+              Search live openings that fit a job seeker's skills, experience, location, and pay goals.
+              Upload a resume or fill in the profile, then rank roles and build a tailored application kit.
             </p>
           </div>
           <div class="topbar-actions">
@@ -614,8 +613,8 @@
           </div>
           <div class="stat">
             <div class="stat-label">Target role focus</div>
-            <div class="stat-value" id="focusValue">Ops + Fleet + Tech</div>
-            <div class="stat-note">Fleet operations, triage, technician, field ops, service, support.</div>
+            <div class="stat-value" id="focusValue">Open Match</div>
+            <div class="stat-note">Use the career focus menu to tune matching for any job seeker.</div>
           </div>
         </section>
 
@@ -626,8 +625,22 @@
               <input
                 id="titleSearch"
                 type="text"
-                value="fleet operations, triage, technician, field service, dispatch, logistics, support specialist"
+                value="operations, support, coordinator, specialist, analyst, technician, customer success"
               />
+            </div>
+            <div class="field">
+              <label for="careerFocus">Career focus</label>
+              <select id="careerFocus">
+                <option value="open" selected>Open to any fit</option>
+                <option value="operations">Operations / logistics</option>
+                <option value="technical">Technical / IT / engineering</option>
+                <option value="customer">Customer support / success</option>
+                <option value="sales">Sales / business development</option>
+                <option value="admin">Administrative / office</option>
+                <option value="healthcare">Healthcare / caregiving</option>
+                <option value="finance">Finance / accounting</option>
+                <option value="creative">Creative / marketing / design</option>
+              </select>
             </div>
             <div class="field">
               <label for="locationMode">Work style</label>
@@ -650,8 +663,8 @@
               <label for="companyScope">Company set</label>
               <select id="companyScope">
                 <option value="all">All tracked employers</option>
-                <option value="core">AV / robotics employers</option>
-                <option value="ops">Broader ops / fleet / service employers</option>
+                <option value="core">Tech / robotics employers</option>
+                <option value="ops">Operations-heavy employers</option>
               </select>
             </div>
             <div class="field">
@@ -699,7 +712,7 @@
                     </div>
                     <div class="field">
                       <label for="profileCoreExperience">Core experience</label>
-                      <textarea id="profileCoreExperience">Replace this sample text with your own operations, technician, support, or logistics background.</textarea>
+                      <textarea id="profileCoreExperience">Replace this sample text with your own work history, education, skills, strengths, and target roles.</textarea>
                     </div>
                     <div class="field">
                       <label for="salaryTarget">Salary target</label>
@@ -725,29 +738,29 @@
                 <div class="panel">
                   <div class="field">
                     <label for="profileHeadline">Resume headline</label>
-                    <textarea id="profileHeadline">Operations and technician professional with hands-on support experience, strong documentation habits, and a fit for fleet support, service, field operations, dispatch, logistics, and operations coordination roles.</textarea>
+                    <textarea id="profileHeadline">Job seeker with adaptable experience, strong communication, reliable follow-through, and a fit for roles that match the profile details above.</textarea>
                   </div>
                 </div>
 
                 <div class="panel">
                   <div class="field">
                     <label for="profileKeywords">Match keywords</label>
-                    <textarea id="profileKeywords">fleet operations, triage, diagnostics, issue tracking, shift lead, technician, service, field service, dispatch, logistics, operations support, documentation, cross-functional handoff, vehicle tracking, safety, maintenance, coordination, quality</textarea>
+                    <textarea id="profileKeywords">operations, support, coordinator, specialist, analyst, technician, customer service, administration, communication, documentation, teamwork, problem solving, scheduling, quality, project coordination</textarea>
                   </div>
                 </div>
 
                 <div class="panel">
                   <div class="field">
                     <label for="profileWins">Experience bullets to reuse</label>
-                    <textarea id="profileWins">Operations role: shift leadership, coordination, escalation handling, dispatch support, and cross-functional communication.
-Technical support role: issue intake, troubleshooting, documentation, prioritization, and coordination with partner teams.
-Technician role: diagnostics, maintenance, inspections, hands-on repair support, pace, quality, and customer-facing clarity.
-High-volume support role: process discipline, pattern recognition, decision consistency, and queue management.</textarea>
+                    <textarea id="profileWins">Recent role: describe responsibilities, tools, results, and the type of work you handled.
+Strong skill area: describe a strength such as communication, problem solving, technical work, sales, care, analysis, or coordination.
+Achievement: add a measurable result, project, promotion, customer impact, or process improvement.
+Work style: describe reliability, pace, teamwork, documentation, leadership, or independent execution.</textarea>
                   </div>
                 </div>
 
                 <div class="panel">
-                  <h3>Target companies</h3>
+                  <h3>Tracked employers</h3>
                   <div class="source-list" id="sourceList"></div>
                 </div>
 
@@ -866,53 +879,95 @@ High-volume support role: process discipline, pattern recognition, decision cons
           hourlyMax: 60,
         },
         tags: [
-          "fleet operations",
-          "triage",
-          "diagnostics",
-          "shift lead",
-          "technician",
-          "service",
-          "field service",
-          "dispatch",
-          "logistics",
-          "operations support",
+          "operations",
+          "support",
           "coordinator",
-          "deployment",
-          "vehicle tracking",
+          "specialist",
+          "analyst",
+          "technician",
+          "customer service",
+          "administration",
+          "communication",
+          "documentation",
+          "problem solving",
+          "teamwork",
+          "quality",
         ],
         experiences: [
           {
-            company: "Operations Team",
-            role: "Operations Lead",
-            keywords: ["fleet", "operations", "dispatch", "shift", "incident", "handoff", "support"],
+            company: "Recent Role",
+            role: "Relevant Experience",
+            keywords: ["operations", "support", "coordination", "project", "process", "customer", "team"],
             bullet:
-              "Bring operations leadership forward: shift coverage, cross-team coordination, escalation handling, and dependable execution in fast-moving environments.",
+              "Bring forward the most relevant recent experience: responsibilities, tools used, customer or team impact, and dependable execution.",
           },
           {
-            company: "Support Team",
-            role: "Triage Specialist",
-            keywords: ["triage", "defect", "troubleshooting", "documentation", "repair", "quality"],
+            company: "Skill Area",
+            role: "Core Strength",
+            keywords: ["communication", "documentation", "troubleshooting", "analysis", "quality", "service"],
             bullet:
-              "Lean on triage experience for roles that need strong issue intake, troubleshooting judgment, clean notes, and fast collaboration with technical teams.",
+              "Highlight core strengths such as communication, documentation, troubleshooting, analysis, service, or quality-focused work.",
           },
           {
-            company: "Service Team",
-            role: "Lead Technician",
-            keywords: ["technician", "diagnostics", "maintenance", "repair", "inspection", "service"],
+            company: "Achievement",
+            role: "Measurable Win",
+            keywords: ["improve", "increase", "reduce", "lead", "manage", "resolve", "train"],
             bullet:
-              "Use hands-on technician credibility for equipment support, maintenance, inspection, and quality-focused operations where practical troubleshooting matters.",
+              "Use measurable wins where possible: improvements, volume handled, people supported, time saved, customers helped, or projects completed.",
           },
           {
-            company: "Support Operations",
-            role: "Queue Specialist",
-            keywords: ["queue", "review", "process", "consistency", "documentation"],
+            company: "Work Style",
+            role: "Execution Pattern",
+            keywords: ["reliable", "fast-paced", "independent", "team", "organized", "detail"],
             bullet:
-              "For operational support roles, highlight discipline in high-volume review environments, consistent judgment, and clear documentation habits.",
+              "For all roles, show work style clearly: reliability, pace, teamwork, independent ownership, organization, and follow-through.",
           },
         ],
       };
 
       const fallbackJobs = [
+        {
+          id: "fallback-general-admin",
+          company: "Sample Employer",
+          title: "Administrative Coordinator",
+          location: "Remote / Hybrid",
+          remoteCategory: "Hybrid",
+          compensationText: "$70,000 - $90,000",
+          compensationParsed: { kind: "salary", min: 70000, max: 90000, withinRange: true },
+          url: "#",
+          source: "Fallback match",
+          postedAt: "",
+          description:
+            "General coordinator role focused on scheduling, communication, documentation, follow-up, and keeping work moving across teams.",
+        },
+        {
+          id: "fallback-general-customer",
+          company: "Sample Employer",
+          title: "Customer Success Specialist",
+          location: "Remote",
+          remoteCategory: "Remote",
+          compensationText: "$75,000 - $95,000",
+          compensationParsed: { kind: "salary", min: 75000, max: 95000, withinRange: true },
+          url: "#",
+          source: "Fallback match",
+          postedAt: "",
+          description:
+            "Customer-facing role built around communication, problem solving, account support, documentation, and dependable follow-through.",
+        },
+        {
+          id: "fallback-general-analyst",
+          company: "Sample Employer",
+          title: "Operations Analyst",
+          location: "Hybrid",
+          remoteCategory: "Hybrid",
+          compensationText: "$85,000 - $115,000",
+          compensationParsed: { kind: "salary", min: 85000, max: 115000, withinRange: true },
+          url: "#",
+          source: "Fallback match",
+          postedAt: "",
+          description:
+            "Analyst role focused on reporting, process improvement, coordination, data review, and translating business needs into clear next steps.",
+        },
         {
           id: "fallback-zoox-ops",
           company: "Zoox",
@@ -1081,6 +1136,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
       const generateAiKitButton = document.querySelector("#generateAiKit");
 
       const titleSearch = document.querySelector("#titleSearch");
+      const careerFocus = document.querySelector("#careerFocus");
       const locationMode = document.querySelector("#locationMode");
       const compMode = document.querySelector("#compMode");
       const companyScope = document.querySelector("#companyScope");
@@ -1095,6 +1151,46 @@ High-volume support role: process discipline, pattern recognition, decision cons
       const profileHeadline = document.querySelector("#profileHeadline");
       const profileKeywords = document.querySelector("#profileKeywords");
       const profileWins = document.querySelector("#profileWins");
+      const focusValue = document.querySelector("#focusValue");
+
+      const focusPresets = {
+        open: {
+          label: "Open Match",
+          keywords: ["specialist", "coordinator", "associate", "analyst", "support", "assistant", "representative"],
+        },
+        operations: {
+          label: "Operations",
+          keywords: ["operations", "logistics", "coordinator", "dispatch", "fleet", "warehouse", "supply", "scheduler"],
+        },
+        technical: {
+          label: "Technical",
+          keywords: ["technician", "technical support", "it", "engineering", "systems", "diagnostics", "software", "hardware"],
+        },
+        customer: {
+          label: "Customer",
+          keywords: ["customer support", "customer success", "client", "service", "support specialist", "account coordinator"],
+        },
+        sales: {
+          label: "Sales",
+          keywords: ["sales", "business development", "account executive", "account manager", "partnerships", "revenue"],
+        },
+        admin: {
+          label: "Admin",
+          keywords: ["administrative", "office", "assistant", "coordinator", "reception", "scheduler", "records"],
+        },
+        healthcare: {
+          label: "Healthcare",
+          keywords: ["healthcare", "patient", "medical", "care", "clinic", "caregiver", "health"],
+        },
+        finance: {
+          label: "Finance",
+          keywords: ["finance", "accounting", "bookkeeping", "billing", "payroll", "analyst", "accounts"],
+        },
+        creative: {
+          label: "Creative",
+          keywords: ["marketing", "content", "design", "creative", "brand", "social media", "communications"],
+        },
+      };
 
       const normalize = (value) =>
         (value || "")
@@ -1207,15 +1303,30 @@ High-volume support role: process discipline, pattern recognition, decision cons
 
       const inferKeywords = (text) => {
         const catalog = [
-          "fleet operations",
           "operations",
-          "triage",
+          "support",
+          "coordinator",
+          "specialist",
+          "analyst",
           "diagnostics",
           "technician",
           "field service",
           "dispatch",
           "logistics",
           "customer support",
+          "customer success",
+          "sales",
+          "business development",
+          "administrative",
+          "office",
+          "healthcare",
+          "patient",
+          "medical",
+          "finance",
+          "accounting",
+          "marketing",
+          "content",
+          "design",
           "documentation",
           "maintenance",
           "quality",
@@ -1269,11 +1380,15 @@ High-volume support role: process discipline, pattern recognition, decision cons
 
         const headlineParts = [];
         const keywords = normalize(profileKeywords.value);
+        if (keywords.includes("sales") || keywords.includes("business development")) headlineParts.push("sales");
+        if (keywords.includes("healthcare") || keywords.includes("medical")) headlineParts.push("healthcare");
+        if (keywords.includes("finance") || keywords.includes("accounting")) headlineParts.push("finance");
+        if (keywords.includes("marketing") || keywords.includes("design")) headlineParts.push("creative");
         if (keywords.includes("technician") || keywords.includes("maintenance")) headlineParts.push("technician");
         if (keywords.includes("operations") || keywords.includes("dispatch")) headlineParts.push("operations");
         if (keywords.includes("support") || keywords.includes("triage")) headlineParts.push("support");
-        const focus = headlineParts.length ? headlineParts.join(", ") : "operations and support";
-        profileHeadline.value = `Candidate with ${focus} experience, strong documentation habits, and a fit for hands-on service, coordination, troubleshooting, and operations roles.`;
+        const focus = headlineParts.length ? headlineParts.join(", ") : "transferable";
+        profileHeadline.value = `Candidate with ${focus} experience, strong communication habits, and a fit for roles that match the profile, skills, and work history above.`;
 
         if (state.allJobs.length) applyCurrentFilters();
       };
@@ -1297,6 +1412,8 @@ High-volume support role: process discipline, pattern recognition, decision cons
           name: profileName.value.trim() || baseProfile.name,
           location: profileLocation.value.trim() || baseProfile.location,
           coreExperience: profileCoreExperience.value.trim(),
+          focus: careerFocus.value,
+          focusKeywords: focusPresets[careerFocus.value]?.keywords || [],
           pay: {
             salaryMin: salary.min,
             salaryMax: salary.max,
@@ -1412,6 +1529,29 @@ High-volume support role: process discipline, pattern recognition, decision cons
       };
 
       const roleKeywordWeights = [
+        ["specialist", 8],
+        ["coordinator", 10],
+        ["associate", 6],
+        ["analyst", 9],
+        ["assistant", 7],
+        ["representative", 7],
+        ["customer service", 10],
+        ["customer support", 12],
+        ["customer success", 12],
+        ["administrative", 10],
+        ["office", 7],
+        ["sales", 10],
+        ["business development", 12],
+        ["account manager", 10],
+        ["healthcare", 10],
+        ["patient", 9],
+        ["medical", 9],
+        ["finance", 10],
+        ["accounting", 10],
+        ["marketing", 10],
+        ["content", 8],
+        ["design", 8],
+        ["project coordinator", 12],
         ["fleet operations", 18],
         ["shift lead", 12],
         ["triage", 16],
@@ -1457,6 +1597,13 @@ High-volume support role: process discipline, pattern recognition, decision cons
           if (tag && haystack.includes(normalize(tag))) score += 3;
         });
 
+        profile.focusKeywords.forEach((tag) => {
+          if (tag && haystack.includes(normalize(tag))) {
+            score += 7;
+            if (reasons.length < 5) reasons.push(titleCase(tag));
+          }
+        });
+
         baseProfile.experiences.forEach((experience) => {
           const hits = experience.keywords.filter((keyword) => haystack.includes(keyword)).length;
           if (hits >= 2) {
@@ -1484,7 +1631,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
           reasons.push("Bay Area fit");
         }
 
-        if (/manager|director|principal|senior manager|staff engineer/i.test(job.title)) {
+        if (/director|principal|senior manager|staff engineer/i.test(job.title)) {
           score -= 10;
         }
 
@@ -1507,7 +1654,8 @@ High-volume support role: process discipline, pattern recognition, decision cons
           .split(",")
           .map((item) => item.trim())
           .filter(Boolean);
-        const tokens = keywordTokens(titleSearch.value);
+        const focusTokens = focusPresets[careerFocus.value]?.keywords || [];
+        const tokens = [...new Set([...keywordTokens(titleSearch.value), ...focusTokens])];
 
         const haystack = normalize(`${job.title} ${job.description} ${job.company}`);
         const keywordMatch =
@@ -1580,6 +1728,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
         topMatchValue.textContent = top ? `${top.match.score}%` : "--";
         topMatchNote.textContent = top ? `${top.title} at ${top.company}` : "Run a search to score current openings.";
         payLaneValue.textContent = String(payMatches);
+        focusValue.textContent = focusPresets[careerFocus.value]?.label || "Open Match";
         aiRerankTopButton.textContent = state.aiReranked ? "AI reranked" : "AI rerank top jobs";
       };
 
@@ -1644,7 +1793,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
           })
           .sort((a, b) => b.hits - a.hits)[0];
 
-        return `${profile.name} looks strong for this role because the background already lines up with ${job.company}'s operating environment: ${topExperience.role.toLowerCase()} experience, hands-on support knowledge, and the kind of structured documentation and issue ownership that operations teams rely on. In an application, emphasize fast coordination across teams, practical troubleshooting judgment, and reliability under shift-based or field-based workflows.`;
+        return `${profile.name} looks strong for this role because the background lines up with ${job.company}'s needs: ${topExperience.role.toLowerCase()} experience, relevant strengths from the profile, and the kind of communication, follow-through, and ownership employers rely on. In an application, emphasize the closest matching responsibilities, concrete outcomes, and how the candidate's work style fits the role.`;
       };
 
       const generateBullets = (job) => {
@@ -1665,9 +1814,9 @@ High-volume support role: process discipline, pattern recognition, decision cons
 
       const generateChecklist = (job) => {
         const list = [
-          `Tailor the resume headline around "${job.title}" and the mix of operations, technician, service, or support work it calls for.`,
+          `Tailor the resume headline around "${job.title}" and the closest matching skills from the profile.`,
           "Move the most relevant experience above less relevant roles if it is not already first.",
-          "Mirror the job language for fleet, triage, diagnostics, deployment, or technician work where appropriate.",
+          "Mirror the job language where it truthfully matches the candidate's experience.",
           "Add one short metric or scope detail to each highlighted experience before applying.",
         ];
 
@@ -1683,7 +1832,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
       };
 
       const generateEmail = (job) => {
-        return `Hi ${job.company} team, I applied for the ${job.title} role and wanted to share a short note on fit. My background includes operations support, troubleshooting, documentation, and hands-on technical work, so I’m especially interested in roles that combine issue resolution, dependable execution, and strong cross-functional support. I’d be glad to speak further about how that background could help your team.`;
+        return `Hi ${job.company} team, I applied for the ${job.title} role and wanted to share a short note on fit. My background includes the skills and experience summarized in my profile, and I’m especially interested in roles where dependable execution, communication, and relevant hands-on experience can help the team. I’d be glad to speak further about how that background could support your goals.`;
       };
 
       const renderDetail = () => {
@@ -1924,7 +2073,8 @@ High-volume support role: process discipline, pattern recognition, decision cons
         showToast("Fallback roles loaded.");
       });
       document.querySelector("#resetFilters").addEventListener("click", () => {
-        titleSearch.value = "fleet operations, triage, technician, field service, dispatch, logistics, support specialist";
+        titleSearch.value = "operations, support, coordinator, specialist, analyst, technician, customer success";
+        careerFocus.value = "open";
         locationMode.value = "bayarea-onsite";
         compMode.value = "preferred";
         companyScope.value = "all";
@@ -1985,7 +2135,7 @@ High-volume support role: process discipline, pattern recognition, decision cons
         }
       });
 
-      [profileName, profileLocation, profileCoreExperience, salaryTarget, hourlyTarget, profileHeadline, profileKeywords, profileWins].forEach((field) => {
+      [careerFocus, profileName, profileLocation, profileCoreExperience, salaryTarget, hourlyTarget, profileHeadline, profileKeywords, profileWins].forEach((field) => {
         field.addEventListener("change", () => {
           if (state.allJobs.length) applyCurrentFilters();
         });
