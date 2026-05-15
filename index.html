@@ -149,6 +149,19 @@
         max-width: 360px;
       }
 
+      .ai-badge {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 0 12px;
+        border: 1px solid rgba(224, 171, 104, 0.28);
+        border-radius: 999px;
+        background: rgba(224, 171, 104, 0.1);
+        color: #f2d19d;
+        font-size: 0.84rem;
+        font-weight: 700;
+      }
+
       .button,
       .ghost-button,
       .chip-button {
@@ -263,10 +276,47 @@
         margin-top: 14px;
       }
 
+      .quick-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .quick-chip {
+        min-height: 34px;
+        padding: 0 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(121, 183, 255, 0.24);
+        background: rgba(121, 183, 255, 0.08);
+        color: #cae0ff;
+      }
+
       .workspace-band {
         margin-top: 18px;
         border-radius: var(--radius);
         overflow: hidden;
+      }
+
+      .mobile-tabs {
+        display: none;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 10px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .mobile-tab {
+        min-height: 38px;
+        border-radius: var(--radius);
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+      }
+
+      .mobile-tab.active {
+        border-color: rgba(94, 195, 178, 0.36);
+        background: rgba(94, 195, 178, 0.14);
       }
 
       .workspace-grid {
@@ -289,6 +339,13 @@
         align-items: center;
         gap: 12px;
         margin-bottom: 14px;
+      }
+
+      .pane-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-end;
       }
 
       .pane-head p {
@@ -502,6 +559,17 @@
         flex-wrap: wrap;
       }
 
+      .tracker-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .tracker-fields .field:last-child {
+        grid-column: 1 / -1;
+      }
+
       .status-button {
         min-height: 34px;
         padding: 0 12px;
@@ -595,9 +663,30 @@
           justify-content: flex-start;
         }
 
+        .mobile-tabs {
+          display: grid;
+        }
+
+        .workspace-grid {
+          min-height: auto;
+        }
+
+        .workspace-grid[data-mobile-view="profile"] .matches-pane,
+        .workspace-grid[data-mobile-view="profile"] .detail-pane,
+        .workspace-grid[data-mobile-view="matches"] .profile-pane,
+        .workspace-grid[data-mobile-view="matches"] .detail-pane,
+        .workspace-grid[data-mobile-view="apply"] .profile-pane,
+        .workspace-grid[data-mobile-view="apply"] .matches-pane {
+          display: none;
+        }
+
         .pane + .pane {
           border-left: 0;
           border-top: 1px solid var(--line);
+        }
+
+        .tracker-fields {
+          grid-template-columns: 1fr;
         }
 
         .stat {
@@ -624,6 +713,7 @@
             </p>
           </div>
           <div class="topbar-actions">
+            <span class="ai-badge" id="aiStatusBadge">AI checking...</span>
             <button class="button" id="searchNow">Refresh live roles</button>
             <button class="ghost-button" id="aiRerankTop">AI rerank top jobs</button>
             <button class="ghost-button" id="copyProfileSummary">Copy resume summary</button>
@@ -718,15 +808,35 @@
             <button class="chip-button" id="resetFilters">Reset</button>
             <span class="hint small" id="searchStatus">Ready. Search uses public company job boards from the browser.</span>
           </div>
+          <div class="quick-chips" aria-label="Quick job target shortcuts">
+            <button class="quick-chip" type="button" data-chip="remote">Remote</button>
+            <button class="quick-chip" type="button" data-chip="entry">Entry level</button>
+            <button class="quick-chip" type="button" data-chip="nodegree">No degree</button>
+            <button class="quick-chip" type="button" data-chip="customer">Customer-facing</button>
+            <button class="quick-chip" type="button" data-chip="technical">Technical</button>
+            <button class="quick-chip" type="button" data-chip="healthcare">Healthcare</button>
+            <button class="quick-chip" type="button" data-chip="sales">Sales</button>
+            <button class="quick-chip" type="button" data-chip="admin">Admin</button>
+            <button class="quick-chip" type="button" data-chip="operations">Operations</button>
+          </div>
         </section>
 
         <section class="workspace-band">
-          <div class="workspace-grid">
-            <aside class="pane">
+          <div class="mobile-tabs" aria-label="Mobile sections">
+            <button class="mobile-tab active" type="button" data-view="profile">Profile</button>
+            <button class="mobile-tab" type="button" data-view="matches">Matches</button>
+            <button class="mobile-tab" type="button" data-view="apply">Apply</button>
+          </div>
+          <div class="workspace-grid" id="workspaceGrid" data-mobile-view="profile">
+            <aside class="pane profile-pane">
               <div class="pane-head">
                 <div>
                   <h2>Resume Profile</h2>
                   <p>These fields drive the match score and application drafts.</p>
+                </div>
+                <div class="pane-actions">
+                  <button class="chip-button" type="button" id="clearProfile">Clear profile</button>
+                  <button class="chip-button" type="button" id="startOver">Start over</button>
                 </div>
               </div>
 
@@ -804,7 +914,7 @@
               </div>
             </aside>
 
-            <section class="pane">
+            <section class="pane matches-pane">
               <div class="pane-head">
                 <div>
                   <h2>Matched Roles</h2>
@@ -878,6 +988,20 @@
                 <div class="panel">
                   <h3>Tracking status</h3>
                   <div class="status-row" id="statusRow"></div>
+                  <div class="tracker-fields">
+                    <div class="field">
+                      <label for="trackerContact">Contact</label>
+                      <input id="trackerContact" type="text" placeholder="Recruiter, referral, or contact name" />
+                    </div>
+                    <div class="field">
+                      <label for="trackerFollowUp">Follow-up date</label>
+                      <input id="trackerFollowUp" type="date" />
+                    </div>
+                    <div class="field">
+                      <label for="trackerNotes">Notes</label>
+                      <textarea id="trackerNotes" placeholder="Add application notes, next step, interview prep, or reminders."></textarea>
+                    </div>
+                  </div>
                 </div>
               </div>
             </aside>
@@ -891,11 +1015,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
     <script>
+      const STORAGE_KEYS = {
+        profile: "career-match-profile",
+        tracker: "career-match-tracker",
+      };
+
+      const safeParseStorage = (key, fallback) => {
+        try {
+          return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
+        } catch (error) {
+          console.info(error);
+          return fallback;
+        }
+      };
+
       const state = {
         allJobs: [],
         filteredJobs: [],
         selectedJobId: null,
-        tracker: JSON.parse(localStorage.getItem("career-match-tracker") || "{}"),
+        tracker: safeParseStorage(STORAGE_KEYS.tracker, {}),
         lastSearchMode: "live",
         aiReady: false,
         aiReranked: false,
@@ -1118,6 +1256,16 @@
         { company: "Samsara", type: "greenhouse", board: "samsara", scope: ["all", "ops"] },
         { company: "Verkada", type: "greenhouse", board: "verkada", scope: ["all", "ops"] },
         { company: "Veho", type: "greenhouse", board: "veho", scope: ["all", "ops"] },
+        { company: "DoorDash", type: "greenhouse", board: "doordash", scope: ["all", "ops"] },
+        { company: "Instacart", type: "greenhouse", board: "instacart", scope: ["all", "ops"] },
+        { company: "Uber", type: "greenhouse", board: "uber", scope: ["all", "ops"] },
+        { company: "Lyft", type: "greenhouse", board: "lyft", scope: ["all", "ops"] },
+        { company: "Rippling", type: "greenhouse", board: "rippling", scope: ["all"] },
+        { company: "Figma", type: "greenhouse", board: "figma", scope: ["all"] },
+        { company: "Notion", type: "greenhouse", board: "notion", scope: ["all"] },
+        { company: "Hinge Health", type: "greenhouse", board: "hingehealth", scope: ["all"] },
+        { company: "Robinhood", type: "greenhouse", board: "robinhood", scope: ["all"] },
+        { company: "Scale AI", type: "greenhouse", board: "scaleai", scope: ["all", "core", "ops"] },
       ];
 
       const bayAreaTerms = [
@@ -1167,6 +1315,11 @@
       const applyLink = document.querySelector("#applyLink");
       const aiRerankTopButton = document.querySelector("#aiRerankTop");
       const generateAiKitButton = document.querySelector("#generateAiKit");
+      const aiStatusBadge = document.querySelector("#aiStatusBadge");
+      const workspaceGrid = document.querySelector("#workspaceGrid");
+      const trackerContact = document.querySelector("#trackerContact");
+      const trackerFollowUp = document.querySelector("#trackerFollowUp");
+      const trackerNotes = document.querySelector("#trackerNotes");
 
       const titleSearch = document.querySelector("#titleSearch");
       const careerFocus = document.querySelector("#careerFocus");
@@ -1185,6 +1338,60 @@
       const profileKeywords = document.querySelector("#profileKeywords");
       const profileWins = document.querySelector("#profileWins");
       const focusValue = document.querySelector("#focusValue");
+
+      const profileFields = [
+        titleSearch,
+        careerFocus,
+        locationMode,
+        compMode,
+        companyScope,
+        resultLimit,
+        profileName,
+        profileLocation,
+        profileCoreExperience,
+        salaryTarget,
+        hourlyTarget,
+        profileHeadline,
+        profileKeywords,
+        profileWins,
+      ];
+
+      const quickChipPresets = {
+        remote: {
+          locationMode: "remote",
+          keywords: ["remote", "distributed team"],
+        },
+        entry: {
+          keywords: ["entry level", "associate", "coordinator", "assistant", "junior"],
+        },
+        nodegree: {
+          keywords: ["no degree", "equivalent experience", "certification", "hands-on"],
+        },
+        customer: {
+          focus: "customer",
+          keywords: ["customer support", "customer success", "client service"],
+        },
+        technical: {
+          focus: "technical",
+          keywords: ["technical support", "technician", "systems", "diagnostics"],
+        },
+        healthcare: {
+          focus: "healthcare",
+          keywords: ["healthcare", "patient", "clinic", "care"],
+        },
+        sales: {
+          focus: "sales",
+          keywords: ["sales", "business development", "account manager"],
+        },
+        admin: {
+          focus: "admin",
+          keywords: ["administrative", "office", "scheduler", "coordinator"],
+        },
+        operations: {
+          focus: "operations",
+          keywords: ["operations", "logistics", "dispatch", "coordinator"],
+        },
+      };
 
       const focusPresets = {
         open: {
@@ -1242,6 +1449,72 @@
         toast.classList.add("show");
         window.clearTimeout(showToast.timer);
         showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2600);
+      };
+
+      const getProfileDraft = () => ({
+        titleSearch: titleSearch.value,
+        careerFocus: careerFocus.value,
+        locationMode: locationMode.value,
+        compMode: compMode.value,
+        companyScope: companyScope.value,
+        resultLimit: resultLimit.value,
+        profileName: profileName.value,
+        profileLocation: profileLocation.value,
+        profileCoreExperience: profileCoreExperience.value,
+        salaryTarget: salaryTarget.value,
+        hourlyTarget: hourlyTarget.value,
+        profileHeadline: profileHeadline.value,
+        profileKeywords: profileKeywords.value,
+        profileWins: profileWins.value,
+      });
+
+      const saveProfileDraft = () => {
+        localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(getProfileDraft()));
+      };
+
+      const loadProfileDraft = () => {
+        const draft = safeParseStorage(STORAGE_KEYS.profile, null);
+        if (!draft) return;
+        Object.entries(draft).forEach(([id, value]) => {
+          const field = document.querySelector(`#${id}`);
+          if (field && value != null) field.value = value;
+        });
+      };
+
+      const clearProfileFields = () => {
+        profileName.value = "";
+        profileLocation.value = "";
+        profileCoreExperience.value = "";
+        profileHeadline.value = "";
+        profileKeywords.value = "";
+        profileWins.value = "";
+        careerFocus.value = "open";
+        salaryTarget.value = "80000-120000";
+        hourlyTarget.value = "35-60";
+        resumeUploadStatus.textContent = "PDF, DOCX, TXT, and MD files fill the profile locally.";
+        localStorage.removeItem(STORAGE_KEYS.profile);
+        saveProfileDraft();
+        applyCurrentFilters();
+      };
+
+      const appendKeywords = (keywords) => {
+        const existing = profileKeywords.value
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean);
+        const next = [...new Set([...existing, ...keywords])];
+        profileKeywords.value = next.join(", ");
+      };
+
+      const applyQuickChip = (key) => {
+        const preset = quickChipPresets[key];
+        if (!preset) return;
+        if (preset.focus) careerFocus.value = preset.focus;
+        if (preset.locationMode) locationMode.value = preset.locationMode;
+        appendKeywords(preset.keywords);
+        saveProfileDraft();
+        applyCurrentFilters();
+        showToast("Target updated.");
       };
 
       const parseRangeValue = (value, fallbackMin, fallbackMax) => {
@@ -1424,6 +1697,32 @@
         profileHeadline.value = `Candidate with ${focus} experience, strong communication habits, and a fit for roles that match the profile, skills, and work history above.`;
 
         if (state.allJobs.length) applyCurrentFilters();
+      };
+
+      const applyAiResumeProfile = (profile) => {
+        if (!profile || typeof profile !== "object") return;
+        if (profile.name) profileName.value = profile.name;
+        if (profile.location) profileLocation.value = profile.location;
+        if (profile.core_experience) profileCoreExperience.value = profile.core_experience;
+        if (profile.headline) profileHeadline.value = profile.headline;
+        if (Array.isArray(profile.keywords) && profile.keywords.length) {
+          profileKeywords.value = profile.keywords.slice(0, 28).join(", ");
+        }
+        if (Array.isArray(profile.wins) && profile.wins.length) {
+          profileWins.value = profile.wins.slice(0, 8).join("\n");
+        }
+        if (profile.suggested_focus && focusPresets[profile.suggested_focus]) {
+          careerFocus.value = profile.suggested_focus;
+        }
+        saveProfileDraft();
+        if (state.allJobs.length) applyCurrentFilters();
+      };
+
+      const enhanceProfileWithAiResume = async (text) => {
+        const result = await postJson("/api/ai-resume", {
+          resume_text: text.slice(0, 14000),
+        });
+        applyAiResumeProfile(result.profile);
       };
 
       const getProfile = () => {
@@ -1740,11 +2039,18 @@
           .forEach((entry) => {
             const item = document.createElement("div");
             item.className = "tracker-item";
+            const details = [
+              entry.contact ? `Contact: ${entry.contact}` : "",
+              entry.followUp ? `Follow-up: ${entry.followUp}` : "",
+              entry.notes ? `Notes: ${entry.notes}` : "",
+            ]
+              .filter(Boolean)
+              .join(" · ");
             item.innerHTML = `
               <div class="tracker-top">
                 <div>
                   <strong>${entry.title}</strong>
-                  <span>${entry.company}</span>
+                  <span>${entry.company}${details ? ` · ${details}` : ""}</span>
                 </div>
                 <span class="chip alt">${entry.status}</span>
               </div>
@@ -1925,6 +2231,9 @@
         });
 
         tailoredEmail.textContent = email;
+        trackerContact.value = saved?.contact || "";
+        trackerFollowUp.value = saved?.followUp || "";
+        trackerNotes.value = saved?.notes || "";
 
         statusRow.innerHTML = "";
         ["Interested", "Applied", "Interview", "Follow-up"].forEach((status) => {
@@ -1950,17 +2259,40 @@
       };
 
       const saveJob = (job, status = "Interested") => {
+        const existing = state.tracker[job.id] || {};
         state.tracker[job.id] = {
+          ...existing,
           id: job.id,
           title: job.title,
           company: job.company,
           status,
           url: job.url,
         };
-        localStorage.setItem("career-match-tracker", JSON.stringify(state.tracker));
+        localStorage.setItem(STORAGE_KEYS.tracker, JSON.stringify(state.tracker));
         renderTracker();
         renderDetail();
         showToast(`Saved ${job.title} as ${status}.`);
+      };
+
+      const updateSelectedTrackerDetails = () => {
+        const job = getSelectedJob();
+        if (!job) return;
+        const existing = state.tracker[job.id] || {
+          id: job.id,
+          title: job.title,
+          company: job.company,
+          status: "Interested",
+          url: job.url,
+        };
+        state.tracker[job.id] = {
+          ...existing,
+          contact: trackerContact.value.trim(),
+          followUp: trackerFollowUp.value,
+          notes: trackerNotes.value.trim(),
+        };
+        localStorage.setItem(STORAGE_KEYS.tracker, JSON.stringify(state.tracker));
+        renderTracker();
+        renderStats();
       };
 
       const applyCurrentFilters = () => {
@@ -2112,7 +2444,41 @@
         compMode.value = "preferred";
         companyScope.value = "all";
         resultLimit.value = "50";
+        saveProfileDraft();
         applyCurrentFilters();
+      });
+
+      document.querySelector("#clearProfile").addEventListener("click", () => {
+        clearProfileFields();
+        showToast("Profile cleared.");
+      });
+
+      document.querySelector("#startOver").addEventListener("click", () => {
+        titleSearch.value = "";
+        locationMode.value = "bayarea-onsite";
+        compMode.value = "preferred";
+        companyScope.value = "all";
+        resultLimit.value = "50";
+        clearProfileFields();
+        state.tracker = {};
+        state.aiKitByJobId = {};
+        localStorage.removeItem(STORAGE_KEYS.tracker);
+        renderTracker();
+        renderDetail();
+        showToast("Started fresh.");
+      });
+
+      document.querySelectorAll(".quick-chip").forEach((button) => {
+        button.addEventListener("click", () => applyQuickChip(button.dataset.chip));
+      });
+
+      document.querySelectorAll(".mobile-tab").forEach((button) => {
+        button.addEventListener("click", () => {
+          workspaceGrid.dataset.mobileView = button.dataset.view;
+          document.querySelectorAll(".mobile-tab").forEach((tab) => {
+            tab.classList.toggle("active", tab === button);
+          });
+        });
       });
 
       document.querySelector("#copyProfileSummary").addEventListener("click", () => {
@@ -2156,7 +2522,15 @@
             throw new Error("The resume text was too short to parse.");
           }
           fillProfileFromResume(text);
-          resumeUploadStatus.textContent = `Profile filled from ${file.name}. Review the fields before applying.`;
+          saveProfileDraft();
+          resumeUploadStatus.textContent = `Profile filled from ${file.name}. Checking AI parser...`;
+          try {
+            await enhanceProfileWithAiResume(text);
+            resumeUploadStatus.textContent = `Profile filled from ${file.name} with AI cleanup. Review the fields before applying.`;
+          } catch (aiError) {
+            console.info(aiError);
+            resumeUploadStatus.textContent = `Profile filled from ${file.name}. Add OPENROUTER_API_KEY for AI cleanup.`;
+          }
           showToast("Resume profile filled.");
         } catch (error) {
           console.info(error);
@@ -2168,14 +2542,41 @@
         }
       });
 
-      [careerFocus, profileName, profileLocation, profileCoreExperience, salaryTarget, hourlyTarget, profileHeadline, profileKeywords, profileWins].forEach((field) => {
+      profileFields.forEach((field) => {
+        field.addEventListener("input", saveProfileDraft);
         field.addEventListener("change", () => {
+          saveProfileDraft();
           if (state.allJobs.length) applyCurrentFilters();
         });
       });
 
+      [trackerContact, trackerFollowUp, trackerNotes].forEach((field) => {
+        field.addEventListener("input", updateSelectedTrackerDetails);
+        field.addEventListener("change", updateSelectedTrackerDetails);
+      });
+
+      const checkAiStatus = async () => {
+        try {
+          const response = await fetch("/api/ai-status");
+          const data = await response.json();
+          if (data.ready) {
+            aiStatusBadge.textContent = `AI on: ${data.provider}`;
+            aiStatusBadge.style.borderColor = "rgba(122, 215, 161, 0.32)";
+            aiStatusBadge.style.background = "rgba(122, 215, 161, 0.12)";
+            aiStatusBadge.style.color = "#c8f4d9";
+          } else {
+            aiStatusBadge.textContent = "AI off: add OpenRouter key";
+          }
+        } catch (error) {
+          console.info(error);
+          aiStatusBadge.textContent = "AI status unavailable";
+        }
+      };
+
+      loadProfileDraft();
       renderSources();
       renderTracker();
+      checkAiStatus();
       loadFallbackMatches();
       runSearch();
     </script>
