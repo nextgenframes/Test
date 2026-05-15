@@ -1,29 +1,33 @@
-# Career Match
+# TuneScope
 
-Career Match is a lightweight browser app that searches public job boards and ranks roles against a user's resume, skills, location, and pay goals.
+TuneScope is a lightweight browser tool for finding popular songs and music videos on YouTube.
 
 ## What it does
 
-- pulls live openings from a curated set of public company job boards
-- filters for remote, on-site, hybrid, or SF Bay Area roles
-- scores jobs against resume-aligned keywords and experience areas
-- autofills the profile from PDF, DOCX, TXT, or MD resumes in the browser
-- optionally cleans up resume uploads with AI when an OpenRouter or OpenAI key is configured
-- saves profile inputs locally so users can leave and come back
-- offers quick target chips for remote, entry-level, no-degree, customer, technical, healthcare, sales, admin, and operations searches
-- drafts a tailored pitch, follow-up note, and application checklist
-- saves interesting roles locally with status, contact, follow-up date, and notes
-- can AI-rerank roles and generate an AI application kit when an OpenRouter or OpenAI API key is configured
+- searches YouTube by song, artist, mood, genre, or year
+- pulls real video stats from the YouTube Data API
+- filters results by 100M, 200M, or 300M+ views
+- optionally filters by minimum likes
+- sorts by views, likes, like rate, or newest release
+- opens matching songs directly on YouTube
 
 ## Local use
 
-You can open the app through a local preview server and visit:
+Run the app with the included local server:
 
-`http://127.0.0.1:4173`
+```bash
+YOUTUBE_API_KEY=your_key_here node server.js
+```
+
+Then open:
+
+```text
+http://127.0.0.1:4173
+```
+
+You can also run it with Vercel using `vercel dev`.
 
 ## Deploying on Vercel
-
-This project is static and can be deployed directly from the repo root.
 
 Recommended settings:
 
@@ -32,14 +36,10 @@ Recommended settings:
 - Build Command: leave empty
 - Output Directory: `.`
 
-Environment variables for AI features:
+Environment variables:
 
-- `OPENROUTER_API_KEY` (recommended)
-- `OPENROUTER_MODEL` optional, defaults to `openrouter/free`
-- `OPENROUTER_SITE_URL` optional, set this to your deployed site URL
-- `OPENROUTER_APP_NAME` optional, defaults to `Career Match`
-- `OPENAI_API_KEY` optional fallback
+- `YOUTUBE_API_KEY` is required for live YouTube searches
 
 ## Notes
 
-The app depends on public job board requests from the browser. Some sources may later need a small backend proxy if their public APIs tighten cross-origin restrictions.
+YouTube may hide or omit like counts for some videos. TuneScope only applies the like filter when a video's like count is available.

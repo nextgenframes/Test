@@ -3,22 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Career Match</title>
+    <title>TuneScope</title>
     <style>
       :root {
         color-scheme: dark;
-        --bg: #08131a;
-        --panel: #101c23;
-        --panel-2: #13232c;
-        --line: rgba(177, 215, 226, 0.16);
-        --text: #ecf5f7;
-        --muted: #9db2ba;
-        --teal: #5ec3b2;
-        --amber: #e0ab68;
-        --blue: #79b7ff;
-        --good: #7ad7a1;
-        --warn: #f0c26d;
-        --shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+        --bg: #090b0f;
+        --panel: #111720;
+        --panel-2: #17202b;
+        --line: rgba(231, 238, 246, 0.14);
+        --text: #f4f7fb;
+        --muted: #9aa8b8;
+        --red: #ff4f5f;
+        --gold: #e8b75b;
+        --cyan: #6ed6d0;
+        --green: #79d592;
+        --shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
         --radius: 8px;
         font-family:
           Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
@@ -31,22 +30,22 @@
 
       body {
         margin: 0;
+        min-height: 100vh;
         background:
-          linear-gradient(180deg, rgba(12, 30, 38, 0.9), rgba(8, 19, 26, 1)),
+          linear-gradient(180deg, rgba(26, 9, 13, 0.92), rgba(9, 11, 15, 1) 42%),
           var(--bg);
         color: var(--text);
       }
 
       button,
       input,
-      select,
-      textarea {
+      select {
         font: inherit;
       }
 
       button {
-        cursor: pointer;
         border: 0;
+        cursor: pointer;
       }
 
       a {
@@ -59,51 +58,51 @@
       }
 
       .shell {
-        width: min(1360px, 100%);
+        width: min(1280px, 100%);
         margin: 0 auto;
       }
 
       .topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 20px;
-        position: relative;
-        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+        gap: 18px;
+        align-items: stretch;
         margin: 8px 0 18px;
-        padding: clamp(24px, 4vw, 44px);
-        border: 1px solid color-mix(in srgb, var(--line) 72%, white);
-        border-radius: 14px;
-        background:
-          linear-gradient(120deg, rgba(94, 195, 178, 0.18), transparent 42%),
-          linear-gradient(135deg, rgba(13, 31, 39, 0.98), rgba(16, 28, 35, 0.92) 58%, rgba(45, 36, 25, 0.9));
+      }
+
+      .hero,
+      .search-panel,
+      .stats,
+      .results-panel {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: linear-gradient(180deg, rgba(23, 32, 43, 0.94), rgba(13, 18, 25, 0.98));
         box-shadow: var(--shadow);
       }
 
-      .topbar::after {
-        content: "";
-        position: absolute;
-        right: -120px;
-        top: -90px;
-        width: 420px;
-        height: 260px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        background:
-          repeating-linear-gradient(
-            115deg,
-            rgba(255, 255, 255, 0.1) 0,
-            rgba(255, 255, 255, 0.1) 1px,
-            transparent 1px,
-            transparent 18px
-          );
-        transform: rotate(-8deg);
-        pointer-events: none;
+      .hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 310px;
+        padding: clamp(24px, 5vw, 52px);
       }
 
-      .brand {
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(9, 11, 15, 0.92), rgba(9, 11, 15, 0.58) 48%, rgba(9, 11, 15, 0.86)),
+          url("https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=1500&q=80");
+        background-size: cover;
+        background-position: center;
+        opacity: 0.82;
+      }
+
+      .hero-content {
         position: relative;
         z-index: 1;
-        max-width: 760px;
+        max-width: 680px;
       }
 
       .eyebrow {
@@ -111,101 +110,147 @@
         align-items: center;
         min-height: 30px;
         padding: 0 12px;
-        border: 1px solid rgba(94, 195, 178, 0.3);
+        border: 1px solid rgba(255, 79, 95, 0.4);
         border-radius: 999px;
-        color: #c7f3eb;
-        background: rgba(94, 195, 178, 0.1);
-        font-weight: 700;
+        background: rgba(255, 79, 95, 0.14);
+        color: #ffd4d9;
+        font-size: 0.82rem;
+        font-weight: 800;
       }
 
       h1,
       h2,
-      h3 {
+      h3,
+      p {
         margin: 0;
-        letter-spacing: 0;
       }
 
       h1 {
-        margin-top: 14px;
-        font-size: clamp(2.7rem, 6vw, 5.4rem);
-        line-height: 0.9;
+        margin-top: 16px;
+        max-width: 9ch;
+        font-size: clamp(3rem, 8vw, 6.4rem);
+        line-height: 0.88;
+        letter-spacing: 0;
       }
 
-      .brand p {
-        margin: 16px 0 0;
-        max-width: 62ch;
-        color: #bfd0d5;
-        line-height: 1.5;
-        font-size: 1.05rem;
+      .hero p {
+        margin-top: 18px;
+        max-width: 58ch;
+        color: #d6dde6;
+        line-height: 1.55;
+        font-size: 1.02rem;
       }
 
-      .topbar-actions {
-        position: relative;
-        z-index: 1;
+      .search-panel {
+        padding: 18px;
+      }
+
+      .panel-heading {
         display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: flex-end;
-        max-width: 360px;
-      }
-
-      .ai-badge {
-        display: inline-flex;
         align-items: center;
-        min-height: 34px;
-        padding: 0 12px;
-        border: 1px solid rgba(224, 171, 104, 0.28);
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .panel-heading h2 {
+        font-size: 1rem;
+      }
+
+      .status-pill {
+        min-height: 28px;
+        padding: 0 10px;
+        border: 1px solid rgba(110, 214, 208, 0.28);
         border-radius: 999px;
-        background: rgba(224, 171, 104, 0.1);
-        color: #f2d19d;
-        font-size: 0.84rem;
-        font-weight: 700;
-      }
-
-      .button,
-      .ghost-button,
-      .chip-button {
-        min-height: 40px;
-        border-radius: var(--radius);
-        padding: 0 14px;
-      }
-
-      .button {
-        background: linear-gradient(135deg, var(--teal), var(--amber));
-        color: #07141a;
+        color: #bff3f0;
+        background: rgba(110, 214, 208, 0.1);
+        font-size: 0.78rem;
         font-weight: 800;
       }
 
-      .ghost-button,
-      .chip-button {
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.04);
-        color: var(--text);
+      .field {
+        display: grid;
+        gap: 7px;
+        margin-bottom: 12px;
       }
 
-      .stats-band,
-      .toolbar-band,
-      .workspace-band {
-        border: 1px solid var(--line);
-        background: linear-gradient(180deg, rgba(19, 35, 44, 0.95), rgba(11, 21, 28, 0.98));
-        box-shadow: var(--shadow);
+      label {
+        color: var(--muted);
+        font-size: 0.82rem;
+        font-weight: 800;
       }
 
-      .stats-band,
-      .toolbar-band {
+      input,
+      select {
+        width: 100%;
+        min-height: 44px;
+        border: 1px solid var(--line);
         border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.045);
+        color: var(--text);
+        padding: 0 12px;
+        outline: none;
       }
 
-      .stats-band {
+      input:focus,
+      select:focus {
+        border-color: rgba(110, 214, 208, 0.6);
+        box-shadow: 0 0 0 3px rgba(110, 214, 208, 0.12);
+      }
+
+      .two-up {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .segmented {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .segment {
+        min-height: 42px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.045);
+        color: var(--text);
+        font-weight: 800;
+      }
+
+      .segment[aria-pressed="true"] {
+        border-color: rgba(255, 79, 95, 0.72);
+        background: rgba(255, 79, 95, 0.2);
+      }
+
+      .primary {
+        width: 100%;
+        min-height: 46px;
+        border-radius: var(--radius);
+        background: linear-gradient(135deg, var(--red), var(--gold));
+        color: #130b0b;
+        font-weight: 900;
+      }
+
+      .hint {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 0.83rem;
+        line-height: 1.45;
+      }
+
+      .stats {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 0;
         overflow: hidden;
+        margin-bottom: 18px;
       }
 
       .stat {
-        min-height: 112px;
-        padding: 18px;
+        min-height: 94px;
+        padding: 16px;
         border-right: 1px solid var(--line);
       }
 
@@ -213,479 +258,311 @@
         border-right: 0;
       }
 
-      .stat-label {
+      .stat span {
         color: var(--muted);
-        font-size: 0.9rem;
+        font-size: 0.82rem;
+        font-weight: 800;
       }
 
-      .stat-value {
-        margin-top: 10px;
-        font-size: clamp(1.8rem, 3vw, 2.8rem);
+      .stat strong {
+        display: block;
+        margin-top: 8px;
+        font-size: clamp(1.35rem, 3vw, 2.1rem);
         line-height: 1;
       }
 
-      .stat-note {
-        margin-top: 10px;
-        color: var(--muted);
-        font-size: 0.9rem;
-      }
-
-      .toolbar-band {
-        margin-top: 16px;
-        padding: 18px;
-      }
-
-      .toolbar-grid {
-        display: grid;
-        grid-template-columns: 1.2fr 0.9fr 0.9fr 0.9fr 0.9fr;
-        gap: 14px;
-        align-items: end;
-      }
-
-      .field {
-        display: grid;
-        gap: 7px;
-      }
-
-      .field label {
-        color: var(--muted);
-        font-size: 0.9rem;
-      }
-
-      input,
-      select,
-      textarea {
-        width: 100%;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: rgba(255, 255, 255, 0.04);
-        color: var(--text);
-        padding: 11px 12px;
-      }
-
-      textarea {
-        min-height: 120px;
-        resize: vertical;
-        line-height: 1.45;
-      }
-
-      .toolbar-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 14px;
-      }
-
-      .quick-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 14px;
-      }
-
-      .quick-chip {
-        min-height: 34px;
-        padding: 0 12px;
-        border-radius: 999px;
-        border: 1px solid rgba(121, 183, 255, 0.24);
-        background: rgba(121, 183, 255, 0.08);
-        color: #cae0ff;
-      }
-
-      .workspace-band {
-        margin-top: 18px;
-        border-radius: var(--radius);
+      .results-panel {
         overflow: hidden;
       }
 
-      .mobile-tabs {
-        display: none;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        padding: 10px;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .mobile-tab {
-        min-height: 38px;
-        border-radius: var(--radius);
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.04);
-        color: var(--text);
-      }
-
-      .mobile-tab.active {
-        border-color: rgba(94, 195, 178, 0.36);
-        background: rgba(94, 195, 178, 0.14);
-      }
-
-      .workspace-grid {
-        display: grid;
-        grid-template-columns: minmax(300px, 0.8fr) minmax(420px, 1.35fr) minmax(340px, 0.95fr);
-        min-height: 760px;
-      }
-
-      .pane {
-        padding: 18px;
-      }
-
-      .pane + .pane {
-        border-left: 1px solid var(--line);
-      }
-
-      .pane-head {
+      .results-head {
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 12px;
-        margin-bottom: 14px;
+        padding: 16px;
+        border-bottom: 1px solid var(--line);
       }
 
-      .pane-actions {
+      .results-head h2 {
+        font-size: 1rem;
+      }
+
+      .sort-row {
         display: flex;
-        flex-wrap: wrap;
+        align-items: center;
         gap: 8px;
-        justify-content: flex-end;
       }
 
-      .pane-head p {
-        margin: 6px 0 0;
-        color: var(--muted);
-        font-size: 0.92rem;
+      .sort-row select {
+        width: 190px;
+        min-height: 38px;
       }
 
-      .stack {
+      .results {
         display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 14px;
+        padding: 16px;
       }
 
-      .panel {
+      .card {
+        overflow: hidden;
         border: 1px solid var(--line);
         border-radius: var(--radius);
-        background: rgba(255, 255, 255, 0.03);
-        padding: 14px;
-      }
-
-      .profile-list,
-      .bullet-list,
-      .tracker-list {
-        display: grid;
-        gap: 10px;
-      }
-
-      .profile-item,
-      .bullet-item,
-      .tracker-item {
-        padding: 12px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: rgba(255, 255, 255, 0.035);
-      }
-
-      .profile-item strong,
-      .tracker-item strong {
-        display: block;
-        font-size: 0.95rem;
-      }
-
-      .profile-item span,
-      .tracker-item span {
-        display: block;
-        margin-top: 4px;
-        color: var(--muted);
-        line-height: 1.4;
-      }
-
-      .chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .chip {
-        display: inline-flex;
-        align-items: center;
-        min-height: 28px;
-        padding: 0 10px;
-        border-radius: 999px;
-        background: rgba(94, 195, 178, 0.12);
-        border: 1px solid rgba(94, 195, 178, 0.25);
-        color: #b7eee4;
-        font-size: 0.84rem;
-      }
-
-      .chip.alt {
-        background: rgba(121, 183, 255, 0.11);
-        border-color: rgba(121, 183, 255, 0.25);
-        color: #cae0ff;
-      }
-
-      .chip.warn {
-        background: rgba(224, 171, 104, 0.1);
-        border-color: rgba(224, 171, 104, 0.26);
-        color: #f2d19d;
-      }
-
-      .result-list {
-        display: grid;
-        gap: 10px;
-        max-height: 930px;
-        overflow: auto;
-        padding-right: 2px;
-      }
-
-      .result {
-        width: 100%;
-        text-align: left;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: rgba(255, 255, 255, 0.035);
-        padding: 14px;
-        color: var(--text);
-      }
-
-      .result.active {
-        background: rgba(94, 195, 178, 0.1);
-        border-color: rgba(94, 195, 178, 0.34);
-      }
-
-      .result-top,
-      .detail-top,
-      .tracker-top {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        align-items: flex-start;
-      }
-
-      .result h3,
-      .detail-pane h3 {
-        font-size: 1.04rem;
-        line-height: 1.25;
-      }
-
-      .result-meta,
-      .detail-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 10px;
-      }
-
-      .meta-pill {
-        display: inline-flex;
-        align-items: center;
-        min-height: 28px;
-        padding: 0 10px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
         background: rgba(255, 255, 255, 0.04);
-        color: var(--muted);
-        font-size: 0.84rem;
       }
 
-      .score {
-        min-width: 64px;
-        text-align: center;
-        padding: 8px 10px;
-        border-radius: var(--radius);
-        background: rgba(122, 215, 161, 0.12);
-        border: 1px solid rgba(122, 215, 161, 0.28);
-      }
-
-      .score strong {
+      .thumb {
         display: block;
-        font-size: 1.15rem;
-        line-height: 1;
-      }
-
-      .score span {
-        display: block;
-        margin-top: 4px;
-        color: var(--muted);
-        font-size: 0.78rem;
-      }
-
-      .result p,
-      .detail-pane p,
-      .hint,
-      .empty-state {
-        color: var(--muted);
-        line-height: 1.45;
-      }
-
-      .result p {
-        margin: 12px 0 0;
-      }
-
-      .detail-pane {
-        display: grid;
-        gap: 14px;
-      }
-
-      .detail-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .apply-output {
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: rgba(255, 255, 255, 0.03);
-        padding: 12px;
-      }
-
-      .apply-output h4 {
-        margin: 0 0 8px;
-        font-size: 0.95rem;
-      }
-
-      .apply-output p,
-      .apply-output li {
-        margin: 0;
+        position: relative;
+        width: 100%;
+        border: 0;
+        padding: 0;
+        aspect-ratio: 16 / 9;
+        background: #0c1118;
         color: var(--text);
-        line-height: 1.5;
+        overflow: hidden;
       }
 
-      .apply-output ul {
-        margin: 0;
-        padding-left: 18px;
+      .thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 160ms ease;
       }
 
-      .status-row {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
+      .card:hover .thumb img {
+        transform: scale(1.035);
       }
 
-      .tracker-fields {
+      .play-mark {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: rgba(0, 0, 0, 0.08);
+      }
+
+      .play-mark::before {
+        content: "";
+        width: 58px;
+        height: 58px;
+        border-radius: 999px;
+        background: rgba(255, 79, 95, 0.88);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.36);
+      }
+
+      .play-mark::after {
+        content: "";
+        position: absolute;
+        border-top: 13px solid transparent;
+        border-bottom: 13px solid transparent;
+        border-left: 19px solid #fff;
+        transform: translateX(3px);
+      }
+
+      .badge {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        min-height: 28px;
+        display: inline-flex;
+        align-items: center;
+        padding: 0 9px;
+        border-radius: 999px;
+        background: rgba(9, 11, 15, 0.78);
+        color: #fff;
+        font-size: 0.78rem;
+        font-weight: 900;
+      }
+
+      .card-body {
+        padding: 13px;
+      }
+
+      .title {
+        display: -webkit-box;
+        min-height: 44px;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.3;
+        font-weight: 900;
+        text-decoration: none;
+      }
+
+      .channel {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      .metrics {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        gap: 8px;
         margin-top: 12px;
       }
 
-      .tracker-fields .field:last-child {
-        grid-column: 1 / -1;
-      }
-
-      .status-button {
-        min-height: 34px;
-        padding: 0 12px;
-        border-radius: 999px;
+      .metric {
+        min-height: 58px;
+        padding: 9px;
         border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.04);
-        color: var(--text);
-      }
-
-      .status-button.active {
-        border-color: rgba(94, 195, 178, 0.36);
-        background: rgba(94, 195, 178, 0.14);
-      }
-
-      .small {
-        font-size: 0.84rem;
-      }
-
-      .empty-state {
-        padding: 14px;
-        border: 1px dashed var(--line);
         border-radius: var(--radius);
+        background: rgba(0, 0, 0, 0.16);
       }
 
-      .source-list {
+      .metric span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.72rem;
+        font-weight: 800;
+      }
+
+      .metric strong {
+        display: block;
+        margin-top: 5px;
+        font-size: 1rem;
+      }
+
+      .card-actions {
         display: flex;
-        flex-wrap: wrap;
         gap: 8px;
+        margin-top: 12px;
       }
 
-      .source-pill {
+      .small-link {
         display: inline-flex;
         align-items: center;
-        min-height: 28px;
-        border-radius: 999px;
+        justify-content: center;
+        min-height: 36px;
+        padding: 0 11px;
         border: 1px solid var(--line);
-        padding: 0 10px;
-        color: var(--muted);
-        font-size: 0.82rem;
-      }
-
-      .toast {
-        position: fixed;
-        right: 18px;
-        bottom: 18px;
-        max-width: 340px;
-        background: #f3faf8;
-        color: #08131a;
-        padding: 12px 14px;
         border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.045);
+        color: var(--text);
+        font-size: 0.82rem;
+        font-weight: 900;
+        text-decoration: none;
+      }
+
+      .empty {
+        grid-column: 1 / -1;
+        min-height: 240px;
+        display: grid;
+        place-items: center;
+        padding: 26px;
+        text-align: center;
+        color: var(--muted);
+      }
+
+      .empty strong {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text);
+        font-size: 1.15rem;
+      }
+
+      .load-sentinel {
+        grid-column: 1 / -1;
+        min-height: 78px;
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 800;
+      }
+
+      .player {
+        position: fixed;
+        inset: 0;
+        z-index: 10;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.78);
+      }
+
+      .player.is-open {
+        display: flex;
+      }
+
+      .player-card {
+        width: min(980px, 100%);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: #0b0f15;
         box-shadow: var(--shadow);
-        opacity: 0;
-        transform: translateY(10px);
-        pointer-events: none;
-        transition: opacity 180ms ease, transform 180ms ease;
+        overflow: hidden;
       }
 
-      .toast.show {
-        opacity: 1;
-        transform: translateY(0);
+      .player-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px;
+        border-bottom: 1px solid var(--line);
       }
 
-      @media (max-width: 1180px) {
-        .toolbar-grid,
-        .workspace-grid,
-        .stats-band {
-          grid-template-columns: 1fr 1fr;
-        }
-
-        .pane:nth-child(3) {
-          grid-column: 1 / -1;
-          border-left: 0;
-          border-top: 1px solid var(--line);
-        }
+      .player-title {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 900;
       }
 
-      @media (max-width: 860px) {
-        .app {
-          padding: 14px;
-        }
+      .close-player {
+        flex: 0 0 auto;
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text);
+        font-size: 1.3rem;
+        line-height: 1;
+      }
 
+      .player-frame {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        display: block;
+        border: 0;
+        background: #000;
+      }
+
+      @media (max-width: 980px) {
         .topbar,
-        .toolbar-grid,
-        .workspace-grid,
-        .stats-band {
+        .results {
           grid-template-columns: 1fr;
-          display: grid;
         }
 
-        .topbar-actions {
-          justify-content: flex-start;
+        .stats {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
-        .mobile-tabs {
-          display: grid;
+        .stat:nth-child(2) {
+          border-right: 0;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .app {
+          padding: 12px;
         }
 
-        .workspace-grid {
-          min-height: auto;
+        .hero {
+          min-height: 340px;
         }
 
-        .workspace-grid[data-mobile-view="profile"] .matches-pane,
-        .workspace-grid[data-mobile-view="profile"] .detail-pane,
-        .workspace-grid[data-mobile-view="matches"] .profile-pane,
-        .workspace-grid[data-mobile-view="matches"] .detail-pane,
-        .workspace-grid[data-mobile-view="apply"] .profile-pane,
-        .workspace-grid[data-mobile-view="apply"] .matches-pane {
-          display: none;
-        }
-
-        .pane + .pane {
-          border-left: 0;
-          border-top: 1px solid var(--line);
-        }
-
-        .tracker-fields {
+        .two-up,
+        .stats,
+        .segmented {
           grid-template-columns: 1fr;
         }
 
@@ -697,1888 +574,469 @@
         .stat:last-child {
           border-bottom: 0;
         }
+
+        .results-head {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .sort-row select {
+          width: 100%;
+        }
+
+        .player {
+          padding: 10px;
+        }
       }
     </style>
   </head>
   <body>
     <main class="app">
       <div class="shell">
-        <header class="topbar">
-          <div class="brand">
-            <span class="eyebrow">Personalized job matches from your resume or profile</span>
-            <h1>Career Match</h1>
-            <p>
-              Search live openings that fit a job seeker's skills, experience, location, and pay goals.
-              Upload a resume or fill in the profile, then rank roles and build a tailored application kit.
+        <section class="topbar" aria-label="YouTube song search">
+          <div class="hero">
+            <div class="hero-content">
+              <span class="eyebrow">YouTube song discovery</span>
+              <h1>TuneScope</h1>
+              <p>
+                Search songs and music videos, then keep only the proven hits with at least
+                100, 200, or 300 million views. Sort by views, likes, or engagement and open
+                the best tracks straight on YouTube.
+              </p>
+            </div>
+          </div>
+
+          <form class="search-panel" id="searchForm">
+            <div class="panel-heading">
+              <h2>Find songs</h2>
+              <span class="status-pill" id="apiStatus">Checking API</span>
+            </div>
+
+            <div class="field">
+              <label for="query">Song, artist, mood, or genre</label>
+              <input id="query" name="query" type="search" value="best songs 2026" autocomplete="off" />
+            </div>
+
+            <div class="two-up">
+              <div class="field">
+                <label for="likeFloor">Minimum likes</label>
+                <select id="likeFloor" name="likeFloor">
+                  <option value="0">Any likes</option>
+                  <option value="500000">500K+</option>
+                  <option value="1000000">1M+</option>
+                  <option value="3000000">3M+</option>
+                  <option value="5000000">5M+</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="maxResults">Search depth</label>
+                <select id="maxResults" name="maxResults">
+                  <option value="18">Quick scan</option>
+                  <option value="30" selected>Balanced</option>
+                  <option value="45">Deep scan</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Minimum views</label>
+              <div class="segmented" id="viewButtons">
+                <button class="segment" type="button" data-views="100000000" aria-pressed="true">100M+</button>
+                <button class="segment" type="button" data-views="200000000" aria-pressed="false">200M+</button>
+                <button class="segment" type="button" data-views="300000000" aria-pressed="false">300M+</button>
+              </div>
+            </div>
+
+            <button class="primary" type="submit">Search YouTube</button>
+            <p class="hint">
+              Likes can be hidden or unavailable on some videos. Those videos stay visible only
+              when your like filter is set to any likes.
             </p>
-          </div>
-          <div class="topbar-actions">
-            <span class="ai-badge" id="aiStatusBadge">AI checking...</span>
-            <button class="button" id="searchNow">Refresh live roles</button>
-            <button class="ghost-button" id="aiRerankTop">AI rerank top jobs</button>
-            <button class="ghost-button" id="copyProfileSummary">Copy resume summary</button>
-            <button class="ghost-button" id="loadSeedRoles">Show fallback matches</button>
-          </div>
-        </header>
+          </form>
+        </section>
 
-        <section class="stats-band" aria-label="Match summary">
+        <section class="stats" aria-label="Search summary">
           <div class="stat">
-            <div class="stat-label">Best match right now</div>
-            <div class="stat-value" id="topMatchValue">--</div>
-            <div class="stat-note" id="topMatchNote">Run a search to score current openings.</div>
+            <span>Matches</span>
+            <strong id="matchCount">0</strong>
           </div>
           <div class="stat">
-            <div class="stat-label">Roles in your pay lane</div>
-            <div class="stat-value" id="payLaneValue">0</div>
-            <div class="stat-note">Annual $80k-$120k or hourly $35-$60 when compensation is listed.</div>
+            <span>Top views</span>
+            <strong id="topViews">0</strong>
           </div>
           <div class="stat">
-            <div class="stat-label">Saved applications</div>
-            <div class="stat-value" id="savedCountValue">0</div>
-            <div class="stat-note">Tracked locally in this browser.</div>
+            <span>Top likes</span>
+            <strong id="topLikes">0</strong>
           </div>
           <div class="stat">
-            <div class="stat-label">Target role focus</div>
-            <div class="stat-value" id="focusValue">Open Match</div>
-            <div class="stat-note">Use the career focus menu to tune matching for any job seeker.</div>
+            <span>Minimum views</span>
+            <strong id="activeFloor">100M</strong>
           </div>
         </section>
 
-        <section class="toolbar-band">
-          <div class="toolbar-grid">
-            <div class="field">
-              <label for="titleSearch">Role keywords</label>
-              <input
-                id="titleSearch"
-                type="text"
-                placeholder="Add role keywords, skills, industries, or job titles"
-              />
-            </div>
-            <div class="field">
-              <label for="careerFocus">Career focus</label>
-              <select id="careerFocus">
-                <option value="open" selected>Open to any fit</option>
-                <option value="operations">Operations / logistics</option>
-                <option value="technical">Technical / IT / engineering</option>
-                <option value="customer">Customer support / success</option>
-                <option value="sales">Sales / business development</option>
-                <option value="admin">Administrative / office</option>
-                <option value="healthcare">Healthcare / caregiving</option>
-                <option value="finance">Finance / accounting</option>
-                <option value="creative">Creative / marketing / design</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="locationMode">Work style</label>
-              <select id="locationMode">
-                <option value="all">Remote + on-site</option>
-                <option value="remote">Remote only</option>
-                <option value="onsite">On-site / hybrid only</option>
-                <option value="bayarea-onsite" selected>On-site / hybrid in SF Bay Area</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="compMode">Comp filter</label>
-              <select id="compMode">
-                <option value="preferred">Prefer your pay range</option>
-                <option value="strict">Only your pay range</option>
-                <option value="all">Include unknown compensation</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="companyScope">Company set</label>
-              <select id="companyScope">
-                <option value="all">All tracked employers</option>
-                <option value="core">Tech / robotics employers</option>
-                <option value="ops">Operations-heavy employers</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="resultLimit">Result limit</label>
-              <select id="resultLimit">
-                <option value="12">12</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="50" selected>50</option>
+        <section class="results-panel" aria-label="Filtered videos">
+          <div class="results-head">
+            <h2 id="resultsTitle">Filtered songs</h2>
+            <div class="sort-row">
+              <label for="sortBy">Sort</label>
+              <select id="sortBy">
+                <option value="views">Most views</option>
+                <option value="likes">Most likes</option>
+                <option value="engagement">Best like rate</option>
+                <option value="newest">Newest</option>
               </select>
             </div>
           </div>
-          <div class="toolbar-actions">
-            <button class="button" id="applyFilters">Apply filters</button>
-            <button class="chip-button" id="resetFilters">Reset</button>
-            <span class="hint small" id="searchStatus">Ready. Search uses public company job boards from the browser.</span>
-          </div>
-          <div class="quick-chips" aria-label="Quick job target shortcuts">
-            <button class="quick-chip" type="button" data-chip="remote">Remote</button>
-            <button class="quick-chip" type="button" data-chip="entry">Entry level</button>
-            <button class="quick-chip" type="button" data-chip="nodegree">No degree</button>
-            <button class="quick-chip" type="button" data-chip="customer">Customer-facing</button>
-            <button class="quick-chip" type="button" data-chip="technical">Technical</button>
-            <button class="quick-chip" type="button" data-chip="healthcare">Healthcare</button>
-            <button class="quick-chip" type="button" data-chip="sales">Sales</button>
-            <button class="quick-chip" type="button" data-chip="admin">Admin</button>
-            <button class="quick-chip" type="button" data-chip="operations">Operations</button>
-          </div>
-        </section>
-
-        <section class="workspace-band">
-          <div class="mobile-tabs" aria-label="Mobile sections">
-            <button class="mobile-tab active" type="button" data-view="profile">Profile</button>
-            <button class="mobile-tab" type="button" data-view="matches">Matches</button>
-            <button class="mobile-tab" type="button" data-view="apply">Apply</button>
-          </div>
-          <div class="workspace-grid" id="workspaceGrid" data-mobile-view="profile">
-            <aside class="pane profile-pane">
-              <div class="pane-head">
-                <div>
-                  <h2>Resume Profile</h2>
-                  <p>These fields drive the match score and application drafts.</p>
-                </div>
-                <div class="pane-actions">
-                  <button class="chip-button" type="button" id="clearProfile">Clear profile</button>
-                  <button class="chip-button" type="button" id="startOver">Start over</button>
-                </div>
+          <div class="results" id="results">
+            <div class="empty">
+              <div>
+                <strong>Search for a song list.</strong>
+                Add your YouTube API key, then search by artist, genre, year, or mood.
               </div>
-
-              <div class="stack">
-                <div class="panel">
-                  <div class="profile-list">
-                    <div class="field">
-                      <label for="resumeUpload">Upload resume</label>
-                      <input id="resumeUpload" type="file" accept=".pdf,.docx,.txt,.md" />
-                      <span class="hint small" id="resumeUploadStatus">PDF, DOCX, TXT, and MD files fill the profile locally.</span>
-                    </div>
-                    <div class="field">
-                      <label for="profileName">Name</label>
-                      <input id="profileName" type="text" placeholder="Full name" />
-                    </div>
-                    <div class="field">
-                      <label for="profileLocation">Location</label>
-                      <input id="profileLocation" type="text" placeholder="City, state, remote preference, or region" />
-                    </div>
-                    <div class="field">
-                      <label for="profileCoreExperience">Core experience</label>
-                      <textarea id="profileCoreExperience" placeholder="Paste a short summary of work history, education, skills, strengths, and target roles."></textarea>
-                    </div>
-                    <div class="field">
-                      <label for="salaryTarget">Salary target</label>
-                      <select id="salaryTarget">
-                        <option value="70000-90000">$70,000-$90,000</option>
-                        <option value="80000-120000" selected>$80,000-$120,000</option>
-                        <option value="100000-140000">$100,000-$140,000</option>
-                        <option value="120000-160000">$120,000-$160,000</option>
-                      </select>
-                    </div>
-                    <div class="field">
-                      <label for="hourlyTarget">Hourly target</label>
-                      <select id="hourlyTarget">
-                        <option value="30-45">$30-$45/hour</option>
-                        <option value="35-60" selected>$35-$60/hour</option>
-                        <option value="45-70">$45-$70/hour</option>
-                        <option value="60-90">$60-$90/hour</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="panel">
-                  <div class="field">
-                    <label for="profileHeadline">Resume headline</label>
-                    <textarea id="profileHeadline" placeholder="Add a one or two sentence professional summary."></textarea>
-                  </div>
-                </div>
-
-                <div class="panel">
-                  <div class="field">
-                    <label for="profileKeywords">Match keywords</label>
-                    <textarea id="profileKeywords" placeholder="Add skills, tools, industries, titles, and strengths separated by commas."></textarea>
-                  </div>
-                </div>
-
-                <div class="panel">
-                  <div class="field">
-                    <label for="profileWins">Experience bullets to reuse</label>
-                    <textarea id="profileWins" placeholder="Add resume bullets, achievements, projects, responsibilities, tools, metrics, or strengths."></textarea>
-                  </div>
-                </div>
-
-                <div class="panel">
-                  <h3>Tracked employers</h3>
-                  <div class="source-list" id="sourceList"></div>
-                </div>
-
-                <div class="panel">
-                  <h3>Saved tracker</h3>
-                  <div class="tracker-list" id="trackerList"></div>
-                </div>
-              </div>
-            </aside>
-
-            <section class="pane matches-pane">
-              <div class="pane-head">
-                <div>
-                  <h2>Matched Roles</h2>
-                  <p>Live openings sorted by fit to your resume and comp preferences.</p>
-                </div>
-                <span class="meta-pill" id="resultCountPill">0 roles</span>
-              </div>
-              <div class="result-list" id="resultList"></div>
-            </section>
-
-            <aside class="pane detail-pane">
-              <div class="pane-head">
-                <div>
-                  <h2>Role Detail + Apply Kit</h2>
-                  <p>Pick a role to generate tailored talking points and next steps.</p>
-                </div>
-              </div>
-
-              <div id="detailEmpty" class="empty-state">
-                Search roles or load fallback matches, then choose one to build your application kit.
-              </div>
-
-              <div id="detailCard" hidden>
-                <div class="panel">
-                  <div class="detail-top">
-                    <div>
-                      <h3 id="detailTitle"></h3>
-                      <p id="detailCompanyLine"></p>
-                    </div>
-                    <div class="score">
-                      <strong id="detailScore">0</strong>
-                      <span>match</span>
-                    </div>
-                  </div>
-                  <div class="detail-meta" id="detailMeta"></div>
-                  <p id="detailSummary"></p>
-                  <div class="detail-actions">
-                    <a class="button" id="applyLink" href="#" target="_blank" rel="noreferrer">Open application</a>
-                    <button class="ghost-button" id="generateAiKit">Generate AI kit</button>
-                    <button class="ghost-button" id="saveRole">Save role</button>
-                    <button class="ghost-button" id="copyPitch">Copy pitch</button>
-                    <button class="ghost-button" id="copyEmail">Copy follow-up</button>
-                  </div>
-                </div>
-
-                <div class="panel">
-                  <h3>Why this fits</h3>
-                  <div class="chips" id="fitReasons"></div>
-                </div>
-
-                <div class="apply-output">
-                  <h4>Tailored pitch</h4>
-                  <p id="tailoredPitch"></p>
-                </div>
-
-                <div class="apply-output">
-                  <h4>Resume bullets to emphasize</h4>
-                  <ul id="tailoredBullets"></ul>
-                </div>
-
-                <div class="apply-output">
-                  <h4>Application checklist</h4>
-                  <ul id="tailoredChecklist"></ul>
-                </div>
-
-                <div class="apply-output">
-                  <h4>Follow-up note</h4>
-                  <p id="tailoredEmail"></p>
-                </div>
-
-                <div class="panel">
-                  <h3>Tracking status</h3>
-                  <div class="status-row" id="statusRow"></div>
-                  <div class="tracker-fields">
-                    <div class="field">
-                      <label for="trackerContact">Contact</label>
-                      <input id="trackerContact" type="text" placeholder="Recruiter, referral, or contact name" />
-                    </div>
-                    <div class="field">
-                      <label for="trackerFollowUp">Follow-up date</label>
-                      <input id="trackerFollowUp" type="date" />
-                    </div>
-                    <div class="field">
-                      <label for="trackerNotes">Notes</label>
-                      <textarea id="trackerNotes" placeholder="Add application notes, next step, interview prep, or reminders."></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </aside>
+            </div>
           </div>
         </section>
       </div>
     </main>
 
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="player" id="player" aria-hidden="true">
+      <div class="player-card" role="dialog" aria-modal="true" aria-labelledby="playerTitle">
+        <div class="player-head">
+          <div class="player-title" id="playerTitle">Now playing</div>
+          <button class="close-player" id="closePlayer" type="button" aria-label="Close player">x</button>
+        </div>
+        <iframe
+          class="player-frame"
+          id="playerFrame"
+          title="YouTube player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
     <script>
-      const STORAGE_KEYS = {
-        profile: "career-match-profile",
-        tracker: "career-match-tracker",
-      };
-
-      const safeParseStorage = (key, fallback) => {
-        try {
-          return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
-        } catch (error) {
-          console.info(error);
-          return fallback;
-        }
-      };
-
       const state = {
-        allJobs: [],
-        filteredJobs: [],
-        selectedJobId: null,
-        tracker: safeParseStorage(STORAGE_KEYS.tracker, {}),
-        lastSearchMode: "live",
-        aiReady: false,
-        aiReranked: false,
-        aiKitByJobId: {},
+        videos: [],
+        minViews: 100000000,
+        lastQuery: "",
+        nextPageToken: null,
+        isLoadingMore: false,
+        canLoadMore: false,
       };
 
-      const baseProfile = {
-        name: "Candidate",
-        location: "Preferred location",
-        pay: {
-          salaryMin: 80000,
-          salaryMax: 120000,
-          hourlyMin: 35,
-          hourlyMax: 60,
-        },
-        tags: [
-          "operations",
-          "support",
-          "coordinator",
-          "specialist",
-          "analyst",
-          "technician",
-          "customer service",
-          "administration",
-          "communication",
-          "documentation",
-          "problem solving",
-          "teamwork",
-          "quality",
-        ],
-        experiences: [
-          {
-            company: "Recent Role",
-            role: "Relevant Experience",
-            keywords: ["operations", "support", "coordination", "project", "process", "customer", "team"],
-            bullet:
-              "Bring forward the most relevant recent experience: responsibilities, tools used, customer or team impact, and dependable execution.",
-          },
-          {
-            company: "Skill Area",
-            role: "Core Strength",
-            keywords: ["communication", "documentation", "troubleshooting", "analysis", "quality", "service"],
-            bullet:
-              "Highlight core strengths such as communication, documentation, troubleshooting, analysis, service, or quality-focused work.",
-          },
-          {
-            company: "Achievement",
-            role: "Measurable Win",
-            keywords: ["improve", "increase", "reduce", "lead", "manage", "resolve", "train"],
-            bullet:
-              "Use measurable wins where possible: improvements, volume handled, people supported, time saved, customers helped, or projects completed.",
-          },
-          {
-            company: "Work Style",
-            role: "Execution Pattern",
-            keywords: ["reliable", "fast-paced", "independent", "team", "organized", "detail"],
-            bullet:
-              "For all roles, show work style clearly: reliability, pace, teamwork, independent ownership, organization, and follow-through.",
-          },
-        ],
+      const form = document.querySelector("#searchForm");
+      const queryInput = document.querySelector("#query");
+      const likeFloor = document.querySelector("#likeFloor");
+      const maxResults = document.querySelector("#maxResults");
+      const viewButtons = [...document.querySelectorAll("[data-views]")];
+      const sortBy = document.querySelector("#sortBy");
+      const results = document.querySelector("#results");
+      const apiStatus = document.querySelector("#apiStatus");
+      const matchCount = document.querySelector("#matchCount");
+      const topViews = document.querySelector("#topViews");
+      const topLikes = document.querySelector("#topLikes");
+      const activeFloor = document.querySelector("#activeFloor");
+      const resultsTitle = document.querySelector("#resultsTitle");
+      const player = document.querySelector("#player");
+      const playerFrame = document.querySelector("#playerFrame");
+      const playerTitle = document.querySelector("#playerTitle");
+      const closePlayer = document.querySelector("#closePlayer");
+      let loadObserver = null;
+
+      const formatCompact = (value) =>
+        new Intl.NumberFormat("en", {
+          notation: "compact",
+          maximumFractionDigits: value >= 1000000 ? 1 : 0,
+        }).format(Number(value || 0));
+
+      const formatNumber = (value) => new Intl.NumberFormat("en").format(Number(value || 0));
+
+      const videoUrl = (id) => `https://www.youtube.com/watch?v=${encodeURIComponent(id)}`;
+
+      const embedUrl = (id) =>
+        `https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0`;
+
+      const escapeHtml = (value) =>
+        String(value || "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+
+      const engagementRate = (video) => {
+        if (!video.likes || !video.views) return 0;
+        return video.likes / video.views;
       };
 
-      const fallbackJobs = [
-        {
-          id: "fallback-general-admin",
-          company: "Sample Employer",
-          title: "Administrative Coordinator",
-          location: "Remote / Hybrid",
-          remoteCategory: "Hybrid",
-          compensationText: "$70,000 - $90,000",
-          compensationParsed: { kind: "salary", min: 70000, max: 90000, withinRange: true },
-          url: "#",
-          source: "Fallback match",
-          postedAt: "",
-          description:
-            "General coordinator role focused on scheduling, communication, documentation, follow-up, and keeping work moving across teams.",
-        },
-        {
-          id: "fallback-general-customer",
-          company: "Sample Employer",
-          title: "Customer Success Specialist",
-          location: "Remote",
-          remoteCategory: "Remote",
-          compensationText: "$75,000 - $95,000",
-          compensationParsed: { kind: "salary", min: 75000, max: 95000, withinRange: true },
-          url: "#",
-          source: "Fallback match",
-          postedAt: "",
-          description:
-            "Customer-facing role built around communication, problem solving, account support, documentation, and dependable follow-through.",
-        },
-        {
-          id: "fallback-general-analyst",
-          company: "Sample Employer",
-          title: "Operations Analyst",
-          location: "Hybrid",
-          remoteCategory: "Hybrid",
-          compensationText: "$85,000 - $115,000",
-          compensationParsed: { kind: "salary", min: 85000, max: 115000, withinRange: true },
-          url: "#",
-          source: "Fallback match",
-          postedAt: "",
-          description:
-            "Analyst role focused on reporting, process improvement, coordination, data review, and translating business needs into clear next steps.",
-        },
-        {
-          id: "fallback-zoox-ops",
-          company: "Zoox",
-          title: "Fleet Operations Coordinator",
-          location: "Foster City, CA",
-          remoteCategory: "On-site",
-          compensationText: "$85,000 - $110,000",
-          compensationParsed: { kind: "salary", min: 85000, max: 110000, withinRange: true },
-          url: "https://careers.zoox.com/",
-          source: "Fallback match",
-          postedAt: "",
-          description:
-            "Operations support role focused on dispatch, vehicle readiness, shift coverage, and issue escalation in an autonomous vehicle fleet environment.",
-        },
-        {
-          id: "fallback-gatik-tech",
-          company: "Gatik",
-          title: "Autonomous Vehicle Operations Technician",
-          location: "Mountain View, CA",
-          remoteCategory: "On-site",
-          compensationText: "$38 - $52 / hour",
-          compensationParsed: { kind: "hourly", min: 38, max: 52, withinRange: true },
-          url: "https://gatik.ai/careers",
-          source: "Fallback match",
-          postedAt: "",
-          description:
-            "Hands-on vehicle support, diagnostics, triage, readiness checks, and coordination with test or deployment teams.",
-        },
-        {
-          id: "fallback-maymobility-support",
-          company: "May Mobility",
-          title: "Fleet Support Specialist",
-          location: "Remote / Ann Arbor, MI",
-          remoteCategory: "Hybrid",
-          compensationText: "$82,000 - $102,000",
-          compensationParsed: { kind: "salary", min: 82000, max: 102000, withinRange: true },
-          url: "https://www.maymobility.com/careers/",
-          source: "Fallback match",
-          postedAt: "",
-          description:
-            "Blends fleet coordination, issue management, process documentation, and cross-functional communication for autonomous systems support.",
-        },
-        {
-          id: "fallback-kodiak-triage",
-          company: "Kodiak Robotics",
-          title: "Vehicle Triage Specialist",
-          location: "Lancaster, TX",
-          remoteCategory: "On-site",
-          compensationText: "Compensation not listed",
-          compensationParsed: { kind: "unknown", withinRange: null },
-          url: "https://kodiak.ai/careers/",
-          source: "Fallback match",
-          postedAt: "",
-          description:
-            "Operational and technical triage role supporting autonomous vehicle readiness, diagnostics, maintenance workflows, and repair coordination.",
-        },
-        {
-          id: "fallback-verkada-field",
-          company: "Verkada",
-          title: "Field Service Technician",
-          location: "San Mateo, CA",
-          remoteCategory: "On-site",
-          compensationText: "$40 - $55 / hour",
-          compensationParsed: { kind: "hourly", min: 40, max: 55, withinRange: true },
-          url: "https://www.verkada.com/careers/",
-          source: "Fallback match",
-          postedAt: "",
-          description:
-            "Hands-on service role focused on hardware support, troubleshooting, installation readiness, and customer-facing problem solving.",
-        },
-        {
-          id: "fallback-samsara-ops",
-          company: "Samsara",
-          title: "Operations Coordinator",
-          location: "San Francisco, CA",
-          remoteCategory: "Hybrid",
-          compensationText: "$88,000 - $112,000",
-          compensationParsed: { kind: "salary", min: 88000, max: 112000, withinRange: true },
-          url: "https://www.samsara.com/company/careers",
-          source: "Fallback match",
-          postedAt: "",
-          description:
-            "Cross-functional operations role involving process support, issue handling, scheduling, communication, and structured follow-through.",
-        },
-        {
-          id: "fallback-zipline-logistics",
-          company: "Zipline",
-          title: "Logistics Operations Specialist",
-          location: "South San Francisco, CA",
-          remoteCategory: "On-site",
-          compensationText: "$90,000 - $118,000",
-          compensationParsed: { kind: "salary", min: 90000, max: 118000, withinRange: true },
-          url: "https://www.flyzipline.com/careers",
-          source: "Fallback match",
-          postedAt: "",
-          description:
-            "Operations support role focused on logistics flow, issue escalation, documentation, and dependable execution in a fast-moving environment.",
-        },
-      ];
-
-      const trackedCompanies = [
-        { company: "Zoox", type: "greenhouse", board: "zoox", scope: ["all", "core", "ops"] },
-        { company: "Nuro", type: "greenhouse", board: "nuro", scope: ["all", "core"] },
-        { company: "Aurora", type: "greenhouse", board: "aurorainnovation", scope: ["all", "core"] },
-        { company: "May Mobility", type: "greenhouse", board: "maymobility", scope: ["all", "core", "ops"] },
-        { company: "Waabi", type: "greenhouse", board: "waabi", scope: ["all", "core"] },
-        { company: "Motional", type: "greenhouse", board: "motional", scope: ["all", "core"] },
-        { company: "Gatik", type: "greenhouse", board: "gatik", scope: ["all", "core", "ops"] },
-        { company: "Torc", type: "greenhouse", board: "torcrobotics", scope: ["all", "core", "ops"] },
-        { company: "Plus", type: "greenhouse", board: "plusai", scope: ["all", "core"] },
-        { company: "Kodiak Robotics", type: "greenhouse", board: "kodiakrobotics", scope: ["all", "core", "ops"] },
-        { company: "Applied Intuition", type: "greenhouse", board: "appliedintuition", scope: ["all", "core"] },
-        { company: "Oxa", type: "greenhouse", board: "oxa", scope: ["all", "core"] },
-        { company: "Zipline", type: "greenhouse", board: "zipline", scope: ["all", "ops"] },
-        { company: "Samsara", type: "greenhouse", board: "samsara", scope: ["all", "ops"] },
-        { company: "Verkada", type: "greenhouse", board: "verkada", scope: ["all", "ops"] },
-        { company: "Veho", type: "greenhouse", board: "veho", scope: ["all", "ops"] },
-        { company: "DoorDash", type: "greenhouse", board: "doordash", scope: ["all", "ops"] },
-        { company: "Instacart", type: "greenhouse", board: "instacart", scope: ["all", "ops"] },
-        { company: "Uber", type: "greenhouse", board: "uber", scope: ["all", "ops"] },
-        { company: "Lyft", type: "greenhouse", board: "lyft", scope: ["all", "ops"] },
-        { company: "Rippling", type: "greenhouse", board: "rippling", scope: ["all"] },
-        { company: "Figma", type: "greenhouse", board: "figma", scope: ["all"] },
-        { company: "Notion", type: "greenhouse", board: "notion", scope: ["all"] },
-        { company: "Hinge Health", type: "greenhouse", board: "hingehealth", scope: ["all"] },
-        { company: "Robinhood", type: "greenhouse", board: "robinhood", scope: ["all"] },
-        { company: "Scale AI", type: "greenhouse", board: "scaleai", scope: ["all", "core", "ops"] },
-      ];
-
-      const bayAreaTerms = [
-        "san francisco",
-        "south san francisco",
-        "bay area",
-        "foster city",
-        "san mateo",
-        "redwood city",
-        "menlo park",
-        "palo alto",
-        "mountain view",
-        "sunnyvale",
-        "santa clara",
-        "san jose",
-        "oakland",
-        "berkeley",
-        "alameda",
-        "fremont",
-        "milpitas",
-        "cupertino",
-      ];
-
-      const sourceList = document.querySelector("#sourceList");
-      const resultList = document.querySelector("#resultList");
-      const resultCountPill = document.querySelector("#resultCountPill");
-      const searchStatus = document.querySelector("#searchStatus");
-      const topMatchValue = document.querySelector("#topMatchValue");
-      const topMatchNote = document.querySelector("#topMatchNote");
-      const payLaneValue = document.querySelector("#payLaneValue");
-      const savedCountValue = document.querySelector("#savedCountValue");
-      const trackerList = document.querySelector("#trackerList");
-      const toast = document.querySelector("#toast");
-      const detailEmpty = document.querySelector("#detailEmpty");
-      const detailCard = document.querySelector("#detailCard");
-      const detailTitle = document.querySelector("#detailTitle");
-      const detailCompanyLine = document.querySelector("#detailCompanyLine");
-      const detailScore = document.querySelector("#detailScore");
-      const detailMeta = document.querySelector("#detailMeta");
-      const detailSummary = document.querySelector("#detailSummary");
-      const fitReasons = document.querySelector("#fitReasons");
-      const tailoredPitch = document.querySelector("#tailoredPitch");
-      const tailoredBullets = document.querySelector("#tailoredBullets");
-      const tailoredChecklist = document.querySelector("#tailoredChecklist");
-      const tailoredEmail = document.querySelector("#tailoredEmail");
-      const statusRow = document.querySelector("#statusRow");
-      const applyLink = document.querySelector("#applyLink");
-      const aiRerankTopButton = document.querySelector("#aiRerankTop");
-      const generateAiKitButton = document.querySelector("#generateAiKit");
-      const aiStatusBadge = document.querySelector("#aiStatusBadge");
-      const workspaceGrid = document.querySelector("#workspaceGrid");
-      const trackerContact = document.querySelector("#trackerContact");
-      const trackerFollowUp = document.querySelector("#trackerFollowUp");
-      const trackerNotes = document.querySelector("#trackerNotes");
-
-      const titleSearch = document.querySelector("#titleSearch");
-      const careerFocus = document.querySelector("#careerFocus");
-      const locationMode = document.querySelector("#locationMode");
-      const compMode = document.querySelector("#compMode");
-      const companyScope = document.querySelector("#companyScope");
-      const resultLimit = document.querySelector("#resultLimit");
-      const resumeUpload = document.querySelector("#resumeUpload");
-      const resumeUploadStatus = document.querySelector("#resumeUploadStatus");
-      const profileName = document.querySelector("#profileName");
-      const profileLocation = document.querySelector("#profileLocation");
-      const profileCoreExperience = document.querySelector("#profileCoreExperience");
-      const salaryTarget = document.querySelector("#salaryTarget");
-      const hourlyTarget = document.querySelector("#hourlyTarget");
-      const profileHeadline = document.querySelector("#profileHeadline");
-      const profileKeywords = document.querySelector("#profileKeywords");
-      const profileWins = document.querySelector("#profileWins");
-      const focusValue = document.querySelector("#focusValue");
-
-      const profileFields = [
-        titleSearch,
-        careerFocus,
-        locationMode,
-        compMode,
-        companyScope,
-        resultLimit,
-        profileName,
-        profileLocation,
-        profileCoreExperience,
-        salaryTarget,
-        hourlyTarget,
-        profileHeadline,
-        profileKeywords,
-        profileWins,
-      ];
-
-      const quickChipPresets = {
-        remote: {
-          locationMode: "remote",
-          keywords: ["remote", "distributed team"],
-        },
-        entry: {
-          keywords: ["entry level", "associate", "coordinator", "assistant", "junior"],
-        },
-        nodegree: {
-          keywords: ["no degree", "equivalent experience", "certification", "hands-on"],
-        },
-        customer: {
-          focus: "customer",
-          keywords: ["customer support", "customer success", "client service"],
-        },
-        technical: {
-          focus: "technical",
-          keywords: ["technical support", "technician", "systems", "diagnostics"],
-        },
-        healthcare: {
-          focus: "healthcare",
-          keywords: ["healthcare", "patient", "clinic", "care"],
-        },
-        sales: {
-          focus: "sales",
-          keywords: ["sales", "business development", "account manager"],
-        },
-        admin: {
-          focus: "admin",
-          keywords: ["administrative", "office", "scheduler", "coordinator"],
-        },
-        operations: {
-          focus: "operations",
-          keywords: ["operations", "logistics", "dispatch", "coordinator"],
-        },
-      };
-
-      const focusPresets = {
-        open: {
-          label: "Open Match",
-          keywords: ["specialist", "coordinator", "associate", "analyst", "support", "assistant", "representative"],
-        },
-        operations: {
-          label: "Operations",
-          keywords: ["operations", "logistics", "coordinator", "dispatch", "fleet", "warehouse", "supply", "scheduler"],
-        },
-        technical: {
-          label: "Technical",
-          keywords: ["technician", "technical support", "it", "engineering", "systems", "diagnostics", "software", "hardware"],
-        },
-        customer: {
-          label: "Customer",
-          keywords: ["customer support", "customer success", "client", "service", "support specialist", "account coordinator"],
-        },
-        sales: {
-          label: "Sales",
-          keywords: ["sales", "business development", "account executive", "account manager", "partnerships", "revenue"],
-        },
-        admin: {
-          label: "Admin",
-          keywords: ["administrative", "office", "assistant", "coordinator", "reception", "scheduler", "records"],
-        },
-        healthcare: {
-          label: "Healthcare",
-          keywords: ["healthcare", "patient", "medical", "care", "clinic", "caregiver", "health"],
-        },
-        finance: {
-          label: "Finance",
-          keywords: ["finance", "accounting", "bookkeeping", "billing", "payroll", "analyst", "accounts"],
-        },
-        creative: {
-          label: "Creative",
-          keywords: ["marketing", "content", "design", "creative", "brand", "social media", "communications"],
-        },
-      };
-
-      const normalize = (value) =>
-        (value || "")
-          .toLowerCase()
-          .replace(/<[^>]*>/g, " ")
-          .replace(/&nbsp;/g, " ")
-          .replace(/[^a-z0-9/$.+ -]/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
-
-      const titleCase = (value) =>
-        value.replace(/\b\w/g, (letter) => letter.toUpperCase());
-
-      const showToast = (message) => {
-        toast.textContent = message;
-        toast.classList.add("show");
-        window.clearTimeout(showToast.timer);
-        showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2600);
-      };
-
-      const getProfileDraft = () => ({
-        titleSearch: titleSearch.value,
-        careerFocus: careerFocus.value,
-        locationMode: locationMode.value,
-        compMode: compMode.value,
-        companyScope: companyScope.value,
-        resultLimit: resultLimit.value,
-        profileName: profileName.value,
-        profileLocation: profileLocation.value,
-        profileCoreExperience: profileCoreExperience.value,
-        salaryTarget: salaryTarget.value,
-        hourlyTarget: hourlyTarget.value,
-        profileHeadline: profileHeadline.value,
-        profileKeywords: profileKeywords.value,
-        profileWins: profileWins.value,
-      });
-
-      const saveProfileDraft = () => {
-        localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(getProfileDraft()));
-      };
-
-      const loadProfileDraft = () => {
-        const draft = safeParseStorage(STORAGE_KEYS.profile, null);
-        if (!draft) return;
-        Object.entries(draft).forEach(([id, value]) => {
-          const field = document.querySelector(`#${id}`);
-          if (field && value != null) field.value = value;
+      const getSortedVideos = () => {
+        const videos = [...state.videos];
+        const sorter = sortBy.value;
+        videos.sort((a, b) => {
+          if (sorter === "likes") return (b.likes || 0) - (a.likes || 0);
+          if (sorter === "engagement") return engagementRate(b) - engagementRate(a);
+          if (sorter === "newest") return new Date(b.publishedAt) - new Date(a.publishedAt);
+          return (b.views || 0) - (a.views || 0);
         });
-      };
-
-      const clearProfileFields = () => {
-        profileName.value = "";
-        profileLocation.value = "";
-        profileCoreExperience.value = "";
-        profileHeadline.value = "";
-        profileKeywords.value = "";
-        profileWins.value = "";
-        careerFocus.value = "open";
-        salaryTarget.value = "80000-120000";
-        hourlyTarget.value = "35-60";
-        resumeUploadStatus.textContent = "PDF, DOCX, TXT, and MD files fill the profile locally.";
-        localStorage.removeItem(STORAGE_KEYS.profile);
-        saveProfileDraft();
-        applyCurrentFilters();
-      };
-
-      const appendKeywords = (keywords) => {
-        const existing = profileKeywords.value
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
-        const next = [...new Set([...existing, ...keywords])];
-        profileKeywords.value = next.join(", ");
-      };
-
-      const applyQuickChip = (key) => {
-        const preset = quickChipPresets[key];
-        if (!preset) return;
-        if (preset.focus) careerFocus.value = preset.focus;
-        if (preset.locationMode) locationMode.value = preset.locationMode;
-        appendKeywords(preset.keywords);
-        saveProfileDraft();
-        applyCurrentFilters();
-        showToast("Target updated.");
-      };
-
-      const parseRangeValue = (value, fallbackMin, fallbackMax) => {
-        const [minRaw, maxRaw] = String(value || "")
-          .split("-")
-          .map((item) => Number(item));
-        return {
-          min: Number.isFinite(minRaw) ? minRaw : fallbackMin,
-          max: Number.isFinite(maxRaw) ? maxRaw : fallbackMax,
-        };
-      };
-
-      const cleanResumeText = (text) =>
-        (text || "")
-          .replace(/\r/g, "\n")
-          .replace(/[ \t]+/g, " ")
-          .replace(/\n{3,}/g, "\n\n")
-          .trim();
-
-      const readTextFile = (file) =>
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(cleanResumeText(String(reader.result || "")));
-          reader.onerror = () => reject(reader.error);
-          reader.readAsText(file);
-        });
-
-      const readArrayBuffer = (file) =>
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = () => reject(reader.error);
-          reader.readAsArrayBuffer(file);
-        });
-
-      const extractPdfText = async (file) => {
-        if (!window.pdfjsLib) throw new Error("PDF parser is still loading.");
-        window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-
-        const data = await readArrayBuffer(file);
-        const pdf = await window.pdfjsLib.getDocument({ data }).promise;
-        const pages = [];
-
-        for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
-          const page = await pdf.getPage(pageNumber);
-          const content = await page.getTextContent();
-          pages.push(content.items.map((item) => item.str).join(" "));
-        }
-
-        return cleanResumeText(pages.join("\n"));
-      };
-
-      const extractDocxText = async (file) => {
-        if (!window.mammoth) throw new Error("DOCX parser is still loading.");
-        const arrayBuffer = await readArrayBuffer(file);
-        const result = await window.mammoth.extractRawText({ arrayBuffer });
-        return cleanResumeText(result.value);
-      };
-
-      const extractResumeText = async (file) => {
-        const name = file.name.toLowerCase();
-        if (name.endsWith(".pdf")) return extractPdfText(file);
-        if (name.endsWith(".docx")) return extractDocxText(file);
-        return readTextFile(file);
-      };
-
-      const firstResumeLine = (text) =>
-        text
-          .split("\n")
-          .map((line) => line.trim())
-          .filter(Boolean)
-          .find((line) => {
-            if (/@|www\.|linkedin|github|phone|resume/i.test(line)) return false;
-            if (/\d{3}[-.)\s]\d{3}/.test(line)) return false;
-            return line.length >= 3 && line.length <= 60;
-          }) || "";
-
-      const inferLocation = (text) => {
-        const patterns = [
-          /([A-Z][a-zA-Z .-]+,\s*(?:CA|NY|TX|WA|OR|NV|AZ|FL|IL|MA|MI|PA|GA|CO|NC|VA|NJ|OH))\b/,
-          /(San Francisco Bay Area|Bay Area|Remote)\b/i,
-        ];
-
-        for (const pattern of patterns) {
-          const match = text.match(pattern);
-          if (match) return match[1].trim();
-        }
-
-        return "";
-      };
-
-      const inferKeywords = (text) => {
-        const catalog = [
-          "operations",
-          "support",
-          "coordinator",
-          "specialist",
-          "analyst",
-          "diagnostics",
-          "technician",
-          "field service",
-          "dispatch",
-          "logistics",
-          "customer support",
-          "customer success",
-          "sales",
-          "business development",
-          "administrative",
-          "office",
-          "healthcare",
-          "patient",
-          "medical",
-          "finance",
-          "accounting",
-          "marketing",
-          "content",
-          "design",
-          "documentation",
-          "maintenance",
-          "quality",
-          "safety",
-          "coordination",
-          "service",
-          "repair",
-          "queue management",
-          "cross-functional communication",
-          "issue tracking",
-          "vehicle tracking",
-          "shift lead",
-          "team lead",
-        ];
-        const normalized = normalize(text);
-        const found = catalog.filter((term) => normalized.includes(term));
-        return [...new Set([...found, ...baseProfile.tags])].slice(0, 18).join(", ");
-      };
-
-      const inferCoreExperience = (text) => {
-        const lines = text
-          .split("\n")
-          .map((line) => line.trim())
-          .filter((line) => line.length > 20)
-          .filter((line) => !/@|linkedin|github|education|skills/i.test(line));
-
-        return lines.slice(0, 5).join("\n");
-      };
-
-      const inferWins = (text) => {
-        const lines = text
-          .split("\n")
-          .map((line) => line.replace(/^[-*\u2022]\s*/, "").trim())
-          .filter((line) => line.length > 35)
-          .filter((line) => /led|lead|support|triage|diagnos|maintain|coordinate|dispatch|document|improve|manage|resolve|operate/i.test(line));
-
-        return lines.slice(0, 6).join("\n") || inferCoreExperience(text);
-      };
-
-      const fillProfileFromResume = (text) => {
-        const name = firstResumeLine(text);
-        const location = inferLocation(text);
-        const coreExperience = inferCoreExperience(text);
-        const wins = inferWins(text);
-
-        if (name) profileName.value = name;
-        if (location) profileLocation.value = location;
-        if (coreExperience) profileCoreExperience.value = coreExperience;
-        profileKeywords.value = inferKeywords(text);
-        if (wins) profileWins.value = wins;
-
-        const headlineParts = [];
-        const keywords = normalize(profileKeywords.value);
-        if (keywords.includes("sales") || keywords.includes("business development")) headlineParts.push("sales");
-        if (keywords.includes("healthcare") || keywords.includes("medical")) headlineParts.push("healthcare");
-        if (keywords.includes("finance") || keywords.includes("accounting")) headlineParts.push("finance");
-        if (keywords.includes("marketing") || keywords.includes("design")) headlineParts.push("creative");
-        if (keywords.includes("technician") || keywords.includes("maintenance")) headlineParts.push("technician");
-        if (keywords.includes("operations") || keywords.includes("dispatch")) headlineParts.push("operations");
-        if (keywords.includes("support") || keywords.includes("triage")) headlineParts.push("support");
-        const focus = headlineParts.length ? headlineParts.join(", ") : "transferable";
-        profileHeadline.value = `Candidate with ${focus} experience, strong communication habits, and a fit for roles that match the profile, skills, and work history above.`;
-
-        if (state.allJobs.length) applyCurrentFilters();
-      };
-
-      const applyAiResumeProfile = (profile) => {
-        if (!profile || typeof profile !== "object") return;
-        if (profile.name) profileName.value = profile.name;
-        if (profile.location) profileLocation.value = profile.location;
-        if (profile.core_experience) profileCoreExperience.value = profile.core_experience;
-        if (profile.headline) profileHeadline.value = profile.headline;
-        if (Array.isArray(profile.keywords) && profile.keywords.length) {
-          profileKeywords.value = profile.keywords.slice(0, 28).join(", ");
-        }
-        if (Array.isArray(profile.wins) && profile.wins.length) {
-          profileWins.value = profile.wins.slice(0, 8).join("\n");
-        }
-        if (profile.suggested_focus && focusPresets[profile.suggested_focus]) {
-          careerFocus.value = profile.suggested_focus;
-        }
-        saveProfileDraft();
-        if (state.allJobs.length) applyCurrentFilters();
-      };
-
-      const enhanceProfileWithAiResume = async (text) => {
-        const result = await postJson("/api/ai-resume", {
-          resume_text: text.slice(0, 14000),
-        });
-        applyAiResumeProfile(result.profile);
-      };
-
-      const getProfile = () => {
-        const keywords = profileKeywords.value
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
-
-        const wins = profileWins.value
-          .split("\n")
-          .map((item) => item.trim())
-          .filter(Boolean);
-
-        const salary = parseRangeValue(salaryTarget.value, baseProfile.pay.salaryMin, baseProfile.pay.salaryMax);
-        const hourly = parseRangeValue(hourlyTarget.value, baseProfile.pay.hourlyMin, baseProfile.pay.hourlyMax);
-
-        return {
-          ...baseProfile,
-          name: profileName.value.trim() || baseProfile.name,
-          location: profileLocation.value.trim() || baseProfile.location,
-          coreExperience: profileCoreExperience.value.trim(),
-          focus: careerFocus.value,
-          focusKeywords: focusPresets[careerFocus.value]?.keywords || [],
-          pay: {
-            salaryMin: salary.min,
-            salaryMax: salary.max,
-            hourlyMin: hourly.min,
-            hourlyMax: hourly.max,
-          },
-          headline: profileHeadline.value.trim(),
-          tags: keywords,
-          winLines: wins,
-        };
-      };
-
-      const postJson = async (url, payload) => {
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) {
-          throw new Error(data.error || "Request failed.");
-        }
-        return data;
-      };
-
-      const parseCompensation = (text) => {
-        if (!text) return { kind: "unknown", withinRange: null };
-        const compact = text.replace(/,/g, "");
-        const numbers = [...compact.matchAll(/\$?(\d+(?:\.\d+)?)(?:k)?/gi)].map((match) => {
-          const token = match[0].toLowerCase();
-          const raw = Number(match[1]);
-          return token.includes("k") ? raw * 1000 : raw;
-        });
-
-        const hourly = /hour|hr|hourly/i.test(compact);
-        if (numbers.length >= 2) {
-          const min = Math.min(...numbers);
-          const max = Math.max(...numbers);
-          return { kind: hourly ? "hourly" : "salary", min, max, withinRange: null };
-        }
-
-        return { kind: hourly ? "hourly" : "salary", withinRange: null };
-      };
-
-      const compensationInRange = (parsed, pay) => {
-        if (!parsed || parsed.kind === "unknown" || parsed.min == null || parsed.max == null) return null;
-        return parsed.kind === "hourly"
-          ? parsed.max >= pay.hourlyMin && parsed.min <= pay.hourlyMax
-          : parsed.max >= pay.salaryMin && parsed.min <= pay.salaryMax;
-      };
-
-      const detectRemoteCategory = (job) => {
-        const haystack = normalize(
-          `${job.location || ""} ${job.workplaceType || ""} ${job.description || ""} ${job.title || ""}`,
-        );
-        if (/\bremote\b/.test(haystack)) return "Remote";
-        if (/\bhybrid\b/.test(haystack)) return "Hybrid";
-        return "On-site";
-      };
-
-      const isBayAreaLocation = (job) => {
-        const haystack = normalize(`${job.location || ""} ${job.description || ""}`);
-        return bayAreaTerms.some((term) => haystack.includes(term));
-      };
-
-      const cleanHtmlSummary = (html) => {
-        const parsed = new DOMParser().parseFromString(html || "", "text/html");
-        parsed.querySelectorAll("br").forEach((node) => node.replaceWith("\n"));
-        parsed.querySelectorAll("li").forEach((node) => {
-          node.prepend("• ");
-          node.append("\n");
-        });
-        parsed.querySelectorAll("p").forEach((node) => node.append("\n"));
-
-        const plain = (parsed.body.textContent || "")
-          .replace(/\u00a0/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
-        return plain.slice(0, 380);
-      };
-
-      const fetchGreenhouseJobs = async (source) => {
-        const response = await fetch(
-          `https://boards-api.greenhouse.io/v1/boards/${source.board}/jobs?content=true`,
-          { mode: "cors" },
-        );
-
-        if (!response.ok) throw new Error(`Greenhouse ${source.company} unavailable`);
-        const data = await response.json();
-        return (data.jobs || []).map((job) => {
-          const compensationText = cleanHtmlSummary(job.content).match(
-            /\$[\d,.]+(?:\s*[kK])?(?:\s*-\s*\$[\d,.]+(?:\s*[kK])?)?(?:\s*\/\s*(?:hour|hr))?/,
-          )?.[0] || "";
-
-          return {
-            id: `${source.board}-${job.id}`,
-            company: source.company,
-            title: job.title,
-            location: job.location?.name || "Location not listed",
-            url: job.absolute_url,
-            source: "Greenhouse",
-            postedAt: job.updated_at || "",
-            description: cleanHtmlSummary(job.content || ""),
-            remoteCategory: detectRemoteCategory({
-              title: job.title,
-              location: job.location?.name,
-              description: job.content || "",
-            }),
-            compensationText: compensationText || "Compensation not listed",
-            compensationParsed: parseCompensation(compensationText),
-          };
-        });
-      };
-
-      const roleKeywordWeights = [
-        ["specialist", 8],
-        ["coordinator", 10],
-        ["associate", 6],
-        ["analyst", 9],
-        ["assistant", 7],
-        ["representative", 7],
-        ["customer service", 10],
-        ["customer support", 12],
-        ["customer success", 12],
-        ["administrative", 10],
-        ["office", 7],
-        ["sales", 10],
-        ["business development", 12],
-        ["account manager", 10],
-        ["healthcare", 10],
-        ["patient", 9],
-        ["medical", 9],
-        ["finance", 10],
-        ["accounting", 10],
-        ["marketing", 10],
-        ["content", 8],
-        ["design", 8],
-        ["project coordinator", 12],
-        ["fleet operations", 18],
-        ["shift lead", 12],
-        ["triage", 16],
-        ["autonomous vehicle", 18],
-        ["technician", 14],
-        ["vehicle operations", 16],
-        ["deployment", 12],
-        ["field operations", 14],
-        ["field service", 14],
-        ["dispatch", 12],
-        ["logistics", 12],
-        ["operations coordinator", 14],
-        ["operations specialist", 14],
-        ["support specialist", 12],
-        ["service advisor", 10],
-        ["maintenance technician", 12],
-        ["fleet coordinator", 14],
-        ["operations support", 10],
-        ["service", 8],
-        ["diagnostic", 10],
-        ["quality", 8],
-        ["support", 8],
-        ["maintenance", 10],
-        ["vehicle", 6],
-      ];
-
-      const computeMatch = (job, profile) => {
-        const haystack = normalize(
-          `${job.title} ${job.company} ${job.description} ${job.location} ${job.compensationText}`,
-        );
-        let score = 22;
-        const reasons = [];
-        const withinRange = compensationInRange(job.compensationParsed, profile.pay);
-
-        roleKeywordWeights.forEach(([term, weight]) => {
-          if (haystack.includes(term)) {
-            score += weight;
-            if (reasons.length < 4) reasons.push(titleCase(term));
-          }
-        });
-
-        profile.tags.forEach((tag) => {
-          if (tag && haystack.includes(normalize(tag))) score += 3;
-        });
-
-        profile.focusKeywords.forEach((tag) => {
-          if (tag && haystack.includes(normalize(tag))) {
-            score += 7;
-            if (reasons.length < 5) reasons.push(titleCase(tag));
-          }
-        });
-
-        baseProfile.experiences.forEach((experience) => {
-          const hits = experience.keywords.filter((keyword) => haystack.includes(keyword)).length;
-          if (hits >= 2) {
-            score += 8 + hits * 2;
-            if (reasons.length < 5) reasons.push(`${experience.company} overlap`);
-          }
-        });
-
-        if (job.compensationParsed.kind !== "unknown") {
-          if (withinRange) {
-            score += 12;
-            reasons.push("Comp in range");
-          } else if (withinRange === false) {
-            score -= 8;
-          }
-        }
-
-        if (job.remoteCategory === "Remote") {
-          score += 6;
-          reasons.push("Remote option");
-        }
-
-        if (isBayAreaLocation(job)) {
-          score += 8;
-          reasons.push("Bay Area fit");
-        }
-
-        if (/director|principal|senior manager|staff engineer/i.test(job.title)) {
-          score -= 10;
-        }
-
-        return {
-          score: Math.max(0, Math.min(99, Math.round(score))),
-          reasons: [...new Set(reasons)].slice(0, 5),
-        };
-      };
-
-      const keywordTokens = (value) =>
-        normalize(value)
-          .split(",")
-          .flatMap((group) => group.split(" "))
-          .map((item) => item.trim())
-          .filter((item) => item.length >= 4);
-
-      const matchesFilters = (job) => {
-        const pay = getProfile().pay;
-        const rawGroups = normalize(titleSearch.value)
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
-        const focusTokens = focusPresets[careerFocus.value]?.keywords || [];
-        const tokens = [...new Set([...keywordTokens(titleSearch.value), ...focusTokens])];
-
-        const haystack = normalize(`${job.title} ${job.description} ${job.company}`);
-        const keywordMatch =
-          rawGroups.length === 0 ||
-          rawGroups.some((term) => haystack.includes(term)) ||
-          tokens.filter((term) => haystack.includes(term)).length >= 2 ||
-          tokens.some((term) => normalize(job.title).includes(term));
-        if (!keywordMatch) return false;
-
-        if (locationMode.value === "remote" && job.remoteCategory !== "Remote") return false;
-        if (locationMode.value === "onsite" && job.remoteCategory === "Remote") return false;
-        if (locationMode.value === "bayarea-onsite") {
-          if (job.remoteCategory === "Remote") return false;
-          if (!isBayAreaLocation(job)) return false;
-        }
-
-        if (compMode.value === "strict") {
-          if (job.compensationParsed.kind === "unknown") return false;
-          if (!compensationInRange(job.compensationParsed, pay)) return false;
-        }
-
-        return true;
-      };
-
-      const describeComp = (job) => job.compensationText || "Compensation not listed";
-
-      const renderSources = () => {
-        sourceList.innerHTML = "";
-        trackedCompanies.forEach((source) => {
-          const span = document.createElement("span");
-          span.className = "source-pill";
-          span.textContent = source.company;
-          sourceList.appendChild(span);
-        });
-      };
-
-      const renderTracker = () => {
-        const entries = Object.values(state.tracker);
-        savedCountValue.textContent = String(entries.length);
-        trackerList.innerHTML = "";
-
-        if (!entries.length) {
-          trackerList.innerHTML = `<div class="empty-state">Saved roles will show up here with status and quick access.</div>`;
-          return;
-        }
-
-        entries
-          .sort((a, b) => a.company.localeCompare(b.company))
-          .forEach((entry) => {
-            const item = document.createElement("div");
-            item.className = "tracker-item";
-            const details = [
-              entry.contact ? `Contact: ${entry.contact}` : "",
-              entry.followUp ? `Follow-up: ${entry.followUp}` : "",
-              entry.notes ? `Notes: ${entry.notes}` : "",
-            ]
-              .filter(Boolean)
-              .join(" · ");
-            item.innerHTML = `
-              <div class="tracker-top">
-                <div>
-                  <strong>${entry.title}</strong>
-                  <span>${entry.company}${details ? ` · ${details}` : ""}</span>
-                </div>
-                <span class="chip alt">${entry.status}</span>
-              </div>
-            `;
-            trackerList.appendChild(item);
-          });
+        return videos;
       };
 
       const renderStats = () => {
-        const top = state.filteredJobs[0];
-        const pay = getProfile().pay;
-        const payMatches = state.filteredJobs.filter((job) => compensationInRange(job.compensationParsed, pay)).length;
-
-        topMatchValue.textContent = top ? `${top.match.score}%` : "--";
-        topMatchNote.textContent = top ? `${top.title} at ${top.company}` : "Run a search to score current openings.";
-        payLaneValue.textContent = String(payMatches);
-        focusValue.textContent = focusPresets[careerFocus.value]?.label || "Open Match";
-        aiRerankTopButton.textContent = state.aiReranked ? "AI reranked" : "AI rerank top jobs";
+        const videos = state.videos;
+        matchCount.textContent = String(videos.length);
+        topViews.textContent = formatCompact(Math.max(0, ...videos.map((video) => video.views || 0)));
+        topLikes.textContent = formatCompact(Math.max(0, ...videos.map((video) => video.likes || 0)));
+        activeFloor.textContent = formatCompact(state.minViews);
       };
 
       const renderResults = () => {
-        resultList.innerHTML = "";
-        resultCountPill.textContent = `${state.filteredJobs.length} roles`;
+        renderStats();
+        const videos = getSortedVideos();
+        resultsTitle.textContent = state.lastQuery ? `Filtered songs for "${state.lastQuery}"` : "Filtered songs";
 
-        if (!state.filteredJobs.length) {
-          resultList.innerHTML = `
-            <div class="empty-state">
-              No roles fit the current filters. Try widening the keyword list, allowing unknown compensation,
-              or loading the fallback matches.
-            </div>
-          `;
-          renderStats();
-          return;
-        }
-
-        state.filteredJobs.forEach((job) => {
-          const button = document.createElement("button");
-          button.className = `result${job.id === state.selectedJobId ? " active" : ""}`;
-          button.type = "button";
-          button.innerHTML = `
-            <div class="result-top">
+        if (!videos.length) {
+          results.innerHTML = `
+            <div class="empty">
               <div>
-                <h3>${job.title}</h3>
-                <p>${job.company}</p>
-              </div>
-              <div class="score">
-                <strong>${job.match.score}</strong>
-                <span>match</span>
+                <strong>No matching videos yet.</strong>
+                Try a broader search, lower the like filter, or choose a lower view threshold.
               </div>
             </div>
-            <div class="result-meta">
-              <span class="meta-pill">${job.location}</span>
-              <span class="meta-pill">${job.remoteCategory}</span>
-              <span class="meta-pill">${describeComp(job)}</span>
-              <span class="meta-pill">${job.source}</span>
-            </div>
-            <p>${job.description || "Open role from a tracked employer that may fit your experience."}</p>
           `;
-          button.addEventListener("click", () => {
-            state.selectedJobId = job.id;
-            renderResults();
-            renderDetail();
-          });
-          resultList.appendChild(button);
-        });
+          return;
+        }
 
-        renderStats();
-      };
-
-      const getSelectedJob = () => state.filteredJobs.find((job) => job.id === state.selectedJobId) || null;
-
-      const generatePitch = (job, profile) => {
-        const topExperience = baseProfile.experiences
-          .map((experience) => {
-            const hits = experience.keywords.filter((keyword) =>
-              normalize(`${job.title} ${job.description}`).includes(keyword),
-            ).length;
-            return { ...experience, hits };
+        const cards = videos
+          .map((video) => {
+            const likeText = video.likes === null ? "Hidden" : formatNumber(video.likes);
+            const rate = engagementRate(video);
+            const safeTitle = escapeHtml(video.title);
+            const safeChannel = escapeHtml(video.channelTitle);
+            const safeThumbnail = escapeHtml(video.thumbnail);
+            const safeId = escapeHtml(video.id);
+            return `
+              <article class="card">
+                <button class="thumb" type="button" data-play-id="${safeId}" data-play-title="${safeTitle}" aria-label="Play ${safeTitle}">
+                  <img src="${safeThumbnail}" alt="">
+                  <span class="play-mark" aria-hidden="true"></span>
+                  <span class="badge">${formatCompact(video.views)} views</span>
+                </button>
+                <div class="card-body">
+                  <a class="title" href="${videoUrl(video.id)}" target="_blank" rel="noreferrer">${safeTitle}</a>
+                  <div class="channel">${safeChannel}</div>
+                  <div class="metrics">
+                    <div class="metric">
+                      <span>Views</span>
+                      <strong>${formatNumber(video.views)}</strong>
+                    </div>
+                    <div class="metric">
+                      <span>Likes</span>
+                      <strong>${likeText}</strong>
+                    </div>
+                    <div class="metric">
+                      <span>Like rate</span>
+                      <strong>${rate ? `${(rate * 100).toFixed(2)}%` : "N/A"}</strong>
+                    </div>
+                    <div class="metric">
+                      <span>Published</span>
+                      <strong>${new Date(video.publishedAt).getFullYear()}</strong>
+                    </div>
+                  </div>
+                  <div class="card-actions">
+                    <a class="small-link" href="${videoUrl(video.id)}" target="_blank" rel="noreferrer">Open on YouTube</a>
+                  </div>
+                </div>
+              </article>
+            `;
           })
-          .sort((a, b) => b.hits - a.hits)[0];
+          .join("");
+        const loadText = state.isLoadingMore
+          ? "Loading more songs..."
+          : state.canLoadMore
+            ? "Scroll for more songs"
+            : "End of this result set";
 
-        return `${profile.name} looks strong for this role because the background lines up with ${job.company}'s needs: ${topExperience.role.toLowerCase()} experience, relevant strengths from the profile, and the kind of communication, follow-through, and ownership employers rely on. In an application, emphasize the closest matching responsibilities, concrete outcomes, and how the candidate's work style fits the role.`;
+        results.innerHTML = `${cards}<div class="load-sentinel" id="loadSentinel">${loadText}</div>`;
+        watchLoadSentinel();
       };
 
-      const generateBullets = (job) => {
-        const lines = [];
-        baseProfile.experiences.forEach((experience) => {
-          const haystack = normalize(`${job.title} ${job.description}`);
-          const hits = experience.keywords.filter((keyword) => haystack.includes(keyword)).length;
-          if (hits >= 2) lines.push(experience.bullet);
+      const openPlayer = (id, title) => {
+        playerTitle.textContent = title || "Now playing";
+        playerFrame.src = embedUrl(id);
+        player.classList.add("is-open");
+        player.setAttribute("aria-hidden", "false");
+        closePlayer.focus();
+      };
+
+      const hidePlayer = () => {
+        player.classList.remove("is-open");
+        player.setAttribute("aria-hidden", "true");
+        playerFrame.src = "";
+      };
+
+      const setStatus = (message, tone = "neutral") => {
+        apiStatus.textContent = message;
+        const color = tone === "good" ? "121, 213, 146" : tone === "bad" ? "255, 79, 95" : "110, 214, 208";
+        apiStatus.style.borderColor = `rgba(${color}, 0.32)`;
+        apiStatus.style.background = `rgba(${color}, 0.11)`;
+      };
+
+      const buildSearchParams = (pageToken = "") => {
+        const params = new URLSearchParams({
+          q: state.lastQuery,
+          minViews: String(state.minViews),
+          minLikes: likeFloor.value,
+          maxResults: maxResults.value,
         });
-
-        if (!lines.length) {
-          lines.push(baseProfile.experiences[0].bullet);
-          lines.push(baseProfile.experiences[2].bullet);
-        }
-
-        return lines.slice(0, 3);
+        if (pageToken) params.set("pageToken", pageToken);
+        return params;
       };
 
-      const generateChecklist = (job) => {
-        const list = [
-          `Tailor the resume headline around "${job.title}" and the closest matching skills from the profile.`,
-          "Move the most relevant experience above less relevant roles if it is not already first.",
-          "Mirror the job language where it truthfully matches the candidate's experience.",
-          "Add one short metric or scope detail to each highlighted experience before applying.",
-        ];
-
-        if (job.remoteCategory !== "Remote") {
-          list.push(`Confirm location readiness for ${job.location} and note schedule flexibility if relevant.`);
-        }
-
-        if (job.compensationParsed.kind === "unknown") {
-          list.push("Be ready to ask about compensation band after the first recruiter screen.");
-        }
-
-        return list.slice(0, 5);
-      };
-
-      const generateEmail = (job) => {
-        return `Hi ${job.company} team, I applied for the ${job.title} role and wanted to share a short note on fit. My background includes the skills and experience summarized in my profile, and I’m especially interested in roles where dependable execution, communication, and relevant hands-on experience can help the team. I’d be glad to speak further about how that background could support your goals.`;
-      };
-
-      const renderDetail = () => {
-        const job = getSelectedJob();
-        if (!job) {
-          detailEmpty.hidden = false;
-          detailCard.hidden = true;
-          return;
-        }
-
-        const profile = getProfile();
-        const aiKit = state.aiKitByJobId[job.id] || null;
-        const bullets = aiKit?.bullets || generateBullets(job);
-        const checklist = aiKit?.checklist || generateChecklist(job);
-        const email = aiKit?.follow_up || generateEmail(job);
-        const saved = state.tracker[job.id];
-
-        detailEmpty.hidden = true;
-        detailCard.hidden = false;
-
-        detailTitle.textContent = job.title;
-        detailCompanyLine.textContent = `${job.company} · ${job.location}`;
-        detailScore.textContent = String(job.match.score);
-        detailSummary.textContent = job.description || "Public job description summary unavailable.";
-        applyLink.href = job.url;
-
-        detailMeta.innerHTML = "";
-        [job.remoteCategory, describeComp(job), job.source].forEach((value) => {
-          const span = document.createElement("span");
-          span.className = "meta-pill";
-          span.textContent = value;
-          detailMeta.appendChild(span);
+      const mergeVideos = (incoming) => {
+        const existing = new Set(state.videos.map((video) => video.id));
+        const fresh = (incoming || []).filter((video) => {
+          if (!video?.id || existing.has(video.id)) return false;
+          existing.add(video.id);
+          return true;
         });
-
-        fitReasons.innerHTML = "";
-        job.match.reasons.forEach((reason) => {
-          const span = document.createElement("span");
-          span.className = "chip";
-          span.textContent = reason;
-          fitReasons.appendChild(span);
-        });
-
-        tailoredPitch.textContent = aiKit?.pitch || generatePitch(job, profile);
-
-        tailoredBullets.innerHTML = "";
-        bullets.forEach((line) => {
-          const item = document.createElement("li");
-          item.textContent = line;
-          tailoredBullets.appendChild(item);
-        });
-
-        tailoredChecklist.innerHTML = "";
-        checklist.forEach((line) => {
-          const item = document.createElement("li");
-          item.textContent = line;
-          tailoredChecklist.appendChild(item);
-        });
-
-        tailoredEmail.textContent = email;
-        trackerContact.value = saved?.contact || "";
-        trackerFollowUp.value = saved?.followUp || "";
-        trackerNotes.value = saved?.notes || "";
-
-        statusRow.innerHTML = "";
-        ["Interested", "Applied", "Interview", "Follow-up"].forEach((status) => {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = `status-button${saved?.status === status ? " active" : ""}`;
-          button.textContent = status;
-          button.addEventListener("click", () => {
-            saveJob(job, status);
-          });
-          statusRow.appendChild(button);
-        });
+        state.videos = [...state.videos, ...fresh];
       };
 
-      const copyText = async (value, successMessage) => {
-        try {
-          await navigator.clipboard.writeText(value);
-          showToast(successMessage);
-        } catch (error) {
-          console.info(error);
-          showToast("Copy did not work in this browser.");
-        }
-      };
-
-      const saveJob = (job, status = "Interested") => {
-        const existing = state.tracker[job.id] || {};
-        state.tracker[job.id] = {
-          ...existing,
-          id: job.id,
-          title: job.title,
-          company: job.company,
-          status,
-          url: job.url,
-        };
-        localStorage.setItem(STORAGE_KEYS.tracker, JSON.stringify(state.tracker));
-        renderTracker();
-        renderDetail();
-        showToast(`Saved ${job.title} as ${status}.`);
-      };
-
-      const updateSelectedTrackerDetails = () => {
-        const job = getSelectedJob();
-        if (!job) return;
-        const existing = state.tracker[job.id] || {
-          id: job.id,
-          title: job.title,
-          company: job.company,
-          status: "Interested",
-          url: job.url,
-        };
-        state.tracker[job.id] = {
-          ...existing,
-          contact: trackerContact.value.trim(),
-          followUp: trackerFollowUp.value,
-          notes: trackerNotes.value.trim(),
-        };
-        localStorage.setItem(STORAGE_KEYS.tracker, JSON.stringify(state.tracker));
-        renderTracker();
-        renderStats();
-      };
-
-      const applyCurrentFilters = () => {
-        const profile = getProfile();
-        const prepared = state.allJobs
-          .map((job) => ({ ...job, match: computeMatch(job, profile) }))
-          .filter(matchesFilters)
-          .sort((a, b) => b.match.score - a.match.score)
-          .slice(0, Number(resultLimit.value));
-
-        state.filteredJobs = prepared;
-        if (!prepared.find((job) => job.id === state.selectedJobId)) {
-          state.selectedJobId = prepared[0]?.id || null;
-        }
-
+      const loadMore = async () => {
+        if (!state.canLoadMore || state.isLoadingMore || !state.nextPageToken) return;
+        state.isLoadingMore = true;
+        setStatus("Loading more");
         renderResults();
-        renderDetail();
-      };
-
-      const aiRerankTopJobs = async () => {
-        if (!state.filteredJobs.length) {
-          showToast("Load some jobs first.");
-          return;
-        }
-
-        searchStatus.textContent = "Using AI to rerank the top jobs...";
-        aiRerankTopButton.disabled = true;
 
         try {
-          const result = await postJson("/api/ai-rerank", {
-            profile: getProfile(),
-            jobs: state.filteredJobs.slice(0, 12),
-          });
-
-          const byId = new Map((result.ranked_jobs || []).map((item) => [item.id, item]));
-          state.filteredJobs = state.filteredJobs
-            .map((job) => {
-              const ai = byId.get(job.id);
-              if (!ai) return job;
-              return {
-                ...job,
-                match: {
-                  score: ai.score,
-                  reasons: ai.reasons,
-                },
-                aiCaution: ai.caution,
-              };
-            })
-            .sort((a, b) => b.match.score - a.match.score);
-
-          state.aiReady = true;
-          state.aiReranked = true;
-          state.selectedJobId = state.filteredJobs[0]?.id || state.selectedJobId;
-          searchStatus.textContent = "AI rerank complete.";
-          renderResults();
-          renderDetail();
-          showToast("AI reranked the top jobs.");
-        } catch (error) {
-          console.info(error);
-          searchStatus.textContent = "AI rerank unavailable. Using rule-based matching.";
-          showToast("AI rerank is not ready yet. Add OPENROUTER_API_KEY in Vercel.");
-        } finally {
-          aiRerankTopButton.disabled = false;
-        }
-      };
-
-      const generateAiKit = async () => {
-        const job = getSelectedJob();
-        if (!job) {
-          showToast("Pick a job first.");
-          return;
-        }
-
-        generateAiKitButton.disabled = true;
-        generateAiKitButton.textContent = "Generating...";
-
-        try {
-          const result = await postJson("/api/ai-apply", {
-            profile: getProfile(),
-            job,
-          });
-
-          state.aiReady = true;
-          state.aiKitByJobId[job.id] = result;
-          renderDetail();
-          showToast("AI application kit is ready.");
-        } catch (error) {
-          console.info(error);
-          showToast("AI kit is not ready yet. Add OPENROUTER_API_KEY in Vercel.");
-        } finally {
-          generateAiKitButton.disabled = false;
-          generateAiKitButton.textContent = "Generate AI kit";
-        }
-      };
-
-      const loadFallbackMatches = () => {
-        state.lastSearchMode = "fallback";
-        state.allJobs = fallbackJobs.map((job) => ({ ...job }));
-        searchStatus.textContent = "Showing fallback matches while live sources are unavailable or still loading.";
-        applyCurrentFilters();
-      };
-
-      const runSearch = async () => {
-        searchStatus.textContent = "Searching public job boards...";
-        document.querySelector("#searchNow").disabled = true;
-
-        const scope = companyScope.value;
-        const sources = trackedCompanies.filter((source) => source.scope.includes(scope));
-
-        try {
-          const jobs = [];
-          await Promise.all(
-            sources.map(async (source) => {
-              try {
-                const fetched = await fetchGreenhouseJobs(source);
-                jobs.push(...fetched);
-              } catch (error) {
-                console.info(source.company, error);
-              }
-            }),
-          );
-
-          if (!jobs.length) {
-            loadFallbackMatches();
-            showToast("Live job boards did not respond, so fallback matches were loaded.");
-            return;
-          }
-
-          state.lastSearchMode = "live";
-          state.allJobs = jobs;
-          searchStatus.textContent = `Loaded ${jobs.length} live roles from tracked company boards.`;
-          applyCurrentFilters();
-        } finally {
-          document.querySelector("#searchNow").disabled = false;
-        }
-      };
-
-      document.querySelector("#searchNow").addEventListener("click", runSearch);
-      document.querySelector("#applyFilters").addEventListener("click", applyCurrentFilters);
-      aiRerankTopButton.addEventListener("click", aiRerankTopJobs);
-      document.querySelector("#loadSeedRoles").addEventListener("click", () => {
-        loadFallbackMatches();
-        showToast("Fallback roles loaded.");
-      });
-      document.querySelector("#resetFilters").addEventListener("click", () => {
-        titleSearch.value = "";
-        careerFocus.value = "open";
-        locationMode.value = "bayarea-onsite";
-        compMode.value = "preferred";
-        companyScope.value = "all";
-        resultLimit.value = "50";
-        saveProfileDraft();
-        applyCurrentFilters();
-      });
-
-      document.querySelector("#clearProfile").addEventListener("click", () => {
-        clearProfileFields();
-        showToast("Profile cleared.");
-      });
-
-      document.querySelector("#startOver").addEventListener("click", () => {
-        titleSearch.value = "";
-        locationMode.value = "bayarea-onsite";
-        compMode.value = "preferred";
-        companyScope.value = "all";
-        resultLimit.value = "50";
-        clearProfileFields();
-        state.tracker = {};
-        state.aiKitByJobId = {};
-        localStorage.removeItem(STORAGE_KEYS.tracker);
-        renderTracker();
-        renderDetail();
-        showToast("Started fresh.");
-      });
-
-      document.querySelectorAll(".quick-chip").forEach((button) => {
-        button.addEventListener("click", () => applyQuickChip(button.dataset.chip));
-      });
-
-      document.querySelectorAll(".mobile-tab").forEach((button) => {
-        button.addEventListener("click", () => {
-          workspaceGrid.dataset.mobileView = button.dataset.view;
-          document.querySelectorAll(".mobile-tab").forEach((tab) => {
-            tab.classList.toggle("active", tab === button);
-          });
-        });
-      });
-
-      document.querySelector("#copyProfileSummary").addEventListener("click", () => {
-        copyText(
-          `${getProfile().name}\n${getProfile().location}\n\n${getProfile().coreExperience}\n\n${getProfile().headline}\n\n${profileWins.value.trim()}`,
-          "Resume summary copied.",
-        );
-      });
-
-      document.querySelector("#saveRole").addEventListener("click", () => {
-        const job = getSelectedJob();
-        if (job) saveJob(job);
-      });
-      generateAiKitButton.addEventListener("click", generateAiKit);
-
-      document.querySelector("#copyPitch").addEventListener("click", () => {
-        const job = getSelectedJob();
-        if (!job) return;
-        copyText(
-          `${generatePitch(job, getProfile())}\n\n${generateBullets(job).map((line) => `- ${line}`).join("\n")}`,
-          "Tailored pitch copied.",
-        );
-      });
-
-      document.querySelector("#copyEmail").addEventListener("click", () => {
-        const job = getSelectedJob();
-        if (!job) return;
-        copyText(generateEmail(job), "Follow-up note copied.");
-      });
-
-      resumeUpload.addEventListener("change", async () => {
-        const file = resumeUpload.files?.[0];
-        if (!file) return;
-
-        resumeUploadStatus.textContent = `Reading ${file.name}...`;
-        resumeUpload.disabled = true;
-
-        try {
-          const text = await extractResumeText(file);
-          if (!text || text.length < 40) {
-            throw new Error("The resume text was too short to parse.");
-          }
-          fillProfileFromResume(text);
-          saveProfileDraft();
-          resumeUploadStatus.textContent = `Profile filled from ${file.name}. Checking AI parser...`;
-          try {
-            await enhanceProfileWithAiResume(text);
-            resumeUploadStatus.textContent = `Profile filled from ${file.name} with AI cleanup. Review the fields before applying.`;
-          } catch (aiError) {
-            console.info(aiError);
-            resumeUploadStatus.textContent = `Profile filled from ${file.name}. Add OPENROUTER_API_KEY for AI cleanup.`;
-          }
-          showToast("Resume profile filled.");
-        } catch (error) {
-          console.info(error);
-          resumeUploadStatus.textContent = "Could not read that file. Try a text-based PDF, DOCX, TXT, or MD resume.";
-          showToast("Resume upload did not parse.");
-        } finally {
-          resumeUpload.disabled = false;
-          resumeUpload.value = "";
-        }
-      });
-
-      profileFields.forEach((field) => {
-        field.addEventListener("input", saveProfileDraft);
-        field.addEventListener("change", () => {
-          saveProfileDraft();
-          if (state.allJobs.length) applyCurrentFilters();
-        });
-      });
-
-      [trackerContact, trackerFollowUp, trackerNotes].forEach((field) => {
-        field.addEventListener("input", updateSelectedTrackerDetails);
-        field.addEventListener("change", updateSelectedTrackerDetails);
-      });
-
-      const checkAiStatus = async () => {
-        try {
-          const response = await fetch("/api/ai-status");
+          const response = await fetch(`/api/youtube-search?${buildSearchParams(state.nextPageToken).toString()}`);
           const data = await response.json();
-          if (data.ready) {
-            aiStatusBadge.textContent = `AI on: ${data.provider}`;
-            aiStatusBadge.style.borderColor = "rgba(122, 215, 161, 0.32)";
-            aiStatusBadge.style.background = "rgba(122, 215, 161, 0.12)";
-            aiStatusBadge.style.color = "#c8f4d9";
-          } else {
-            aiStatusBadge.textContent = "AI off: add OpenRouter key";
+
+          if (!response.ok) {
+            throw new Error(data.error || "Could not load more songs.");
           }
+
+          mergeVideos(data.videos);
+          state.nextPageToken = data.nextPageToken || null;
+          state.canLoadMore = Boolean(state.nextPageToken);
+          setStatus("API connected", "good");
         } catch (error) {
           console.info(error);
-          aiStatusBadge.textContent = "AI status unavailable";
+          state.canLoadMore = false;
+          setStatus("More results unavailable", "bad");
+        } finally {
+          state.isLoadingMore = false;
+          renderResults();
         }
       };
 
-      loadProfileDraft();
-      renderSources();
-      renderTracker();
-      checkAiStatus();
-      loadFallbackMatches();
-      runSearch();
+      const watchLoadSentinel = () => {
+        if (loadObserver) loadObserver.disconnect();
+        const sentinel = document.querySelector("#loadSentinel");
+        if (!sentinel || !state.canLoadMore) return;
+
+        loadObserver = new IntersectionObserver(
+          (entries) => {
+            if (entries.some((entry) => entry.isIntersecting)) {
+              loadMore();
+            }
+          },
+          { rootMargin: "700px 0px" },
+        );
+        loadObserver.observe(sentinel);
+      };
+
+      const search = async () => {
+        const query = queryInput.value.trim();
+        if (!query) return;
+
+        state.lastQuery = query;
+        state.videos = [];
+        state.nextPageToken = null;
+        state.canLoadMore = false;
+        state.isLoadingMore = false;
+        setStatus("Searching");
+        results.innerHTML = `
+          <div class="empty">
+            <div>
+              <strong>Scanning YouTube.</strong>
+              Pulling video stats and applying your filters.
+            </div>
+          </div>
+        `;
+
+        try {
+          const response = await fetch(`/api/youtube-search?${buildSearchParams().toString()}`);
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || "Search failed.");
+          }
+
+          state.videos = data.videos || [];
+          state.nextPageToken = data.nextPageToken || null;
+          state.canLoadMore = Boolean(state.nextPageToken);
+          setStatus(data.apiReady ? "API connected" : "API key needed", data.apiReady ? "good" : "bad");
+          renderResults();
+        } catch (error) {
+          console.info(error);
+          state.videos = [];
+          state.nextPageToken = null;
+          state.canLoadMore = false;
+          state.isLoadingMore = false;
+          setStatus("Search unavailable", "bad");
+          renderStats();
+          results.innerHTML = `
+            <div class="empty">
+              <div>
+                <strong>${error.message}</strong>
+                Add YOUTUBE_API_KEY in your environment, then run the search again.
+              </div>
+            </div>
+          `;
+        }
+      };
+
+      const checkStatus = async () => {
+        try {
+          const response = await fetch("/api/youtube-status");
+          const data = await response.json();
+          setStatus(data.ready ? "API connected" : "API key needed", data.ready ? "good" : "bad");
+        } catch (error) {
+          console.info(error);
+          setStatus("Status unavailable", "bad");
+        }
+      };
+
+      viewButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          state.minViews = Number(button.dataset.views);
+          viewButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+          renderStats();
+        });
+      });
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        search();
+      });
+
+      sortBy.addEventListener("change", renderResults);
+      results.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-play-id]");
+        if (!button) return;
+        openPlayer(button.dataset.playId, button.dataset.playTitle);
+      });
+      closePlayer.addEventListener("click", hidePlayer);
+      player.addEventListener("click", (event) => {
+        if (event.target === player) hidePlayer();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && player.classList.contains("is-open")) hidePlayer();
+      });
+      checkStatus();
+      renderStats();
     </script>
   </body>
 </html>
